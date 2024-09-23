@@ -1,68 +1,105 @@
+body,
+section {
+  min-height: 0;
+  min-width: 0;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
 nav {
-    display: flex; 
-    height: 10%;
-    width: 100%; 
-    background-color: #535353;
-    position: absolute;
-    top: 0;
-    left: 0;   
-    align-items: center; 
-    justify-content: space-between;
-  }
+  height: 4rem;
+  background: #4c4c4a;
+  
+  align-items: center; 
+  justify-content: space-between;
+  display: flex;
+
+  padding-left: 20px;
+  padding-right: 20px; 
+}
+
+section {
+  flex: 1 1 0%;
+  display: flex;
+}
+
+aside {
+  width: 4rem;
+  background: #535353;
+  height: 100%;
+
+  padding-left: 20px;
+  padding-right: 20px; 
+
+  border: 3px solid #4c4c4a;
+
+}
+
+main {
+  background: #ffffff;
+  flex: 1 1 0%;
+  overflow: auto;
+  padding: 1rem;
+}
+
+.main {
+  border: 1px black dashed;
+  height: 100%;
+}
 
 .tools {
-    height: 90%;
-    width: 5%;
-    background-color: #535353;
-    border: 4px solid #4c4b4b;
-    position: absolute;
-    z-index: 1;
-    top: 10%;
-    left: 0;
-    /* padding-left: 1%;
-    padding-right: 1%; */
+margin-bottom: 25px;
+margin-top: -10px; 
 }
 
-.paint {
-    width: 95%;
-    height: 90%;
-    margin-left: 5%;
-    margin-top: 5.5%;
-    background: #606060;
-
-  }
-
-
-
-
-p {
-color: white
+.color {
+  margin-bottom: 25px;
+  margin-top: -10px; 
 }
 
-h1 {
-color: white
+.forms {
+  margin-bottom: 25px;
+  margin-top: -10px; 
 }
+
 
 #savebutton {
-    background-color: #316bb3;  /* Hintergrundfarbe des Buttons */
-    color: white;             /* Textfarbe */
-    padding: 7px 14px;       /* Innenabstand (oben/unten: 10px, rechts/links: 20px) */
-    border: none;             /* Keine Rahmenlinie */
-    border-radius: 25px;       /* Abgerundete Ecken */
-    font-size: 16px;          /* Schriftgröße */
-    cursor: pointer;          /* Mauszeiger wird zum Zeiger (wie bei Links) */
+  background-color: #316bb3;  /* Hintergrundfarbe des Buttons */
+  color: white;             /* Textfarbe */
+  padding: 7px 14px;       /* Innenabstand (oben/unten: 10px, rechts/links: 20px) */
+  border: none;             /* Keine Rahmenlinie */
+  border-radius: 25px;       /* Abgerundete Ecken */
+  font-size: 16px;          /* Schriftgröße */
+  font-family: adobe-clean;
+  cursor: pointer;          /* Mauszeiger wird zum Zeiger (wie bei Links) */
 
 }
 
 #savebutton:hover {
-    background-color: #2b64ad;  /* Farbe, wenn die Maus über den Button fährt */
+  background-color: #2b64ad;  /* Farbe, wenn die Maus über den Button fährt */
 }
 
-.align-center {
- /*   margin-left: 1%; */ 
+h1 {
+  font-family: adobe-clean;
+font-weight: 300;
+font-style: normal;
 }
 
-.align-right {
-     /* margin-right: 1%; */
+h2 {
+  font-family: adobe-clean;
+  font-weight: 700;
+  font-style: normal;
+  font-size: 16px;
 }
 
+p {
+  font-family: adobe-clean;
+font-weight: 300;
+font-style: normal;
+}
