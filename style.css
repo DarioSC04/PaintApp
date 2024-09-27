@@ -103,3 +103,10 @@ p {
 font-weight: 300;
 font-style: normal;
 }
+
+canvas {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  z-index: -1;
+}

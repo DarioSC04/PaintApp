@@ -1,14 +1,13 @@
 "use strict";
 const canvas = document.getElementById("canvas");
-const body = document.querySelector('body');
-body.style.backgroundColor = "#FFFFFF";
+const board = document.querySelector('main');
 const ctx = canvas.getContext("2d");
 canvas.height = window.innerHeight;
 canvas.width = window.innerWidth;
 var currentColor = '#FF0000';
 var currentlineW = 5;
 let currentFill = false;
-let currentMode = 'bru';
+let currentMode = '';
 let selectedElement = null;
 let prevX = -1;
 let prevY = -1;
@@ -80,10 +79,17 @@ class Brush extends drawable {
         super(color, lineWidth, drawMode);
         this.lines = [];
     }
-    addLine(x1, y1, x2, y2) {
-        console.log("addLine from " + x1 + " " + y1 + " to " + x2 + " " + y2);
-        this.lines.push(new Shape(x1, y1, x2, y2, this.color, this.lineWidth, false, 'lin', false));
-        this.lines.push(new Shape(x2, y2, x2 + this.lineWidth / 4, y2 + this.lineWidth / 4, this.color, this.lineWidth / 2, true, 'cir', false));
+    addLine(x1, y1, x2, y2, eraser) {
+        if (eraser) {
+            console.log("erase");
+            this.lines.push(new Shape(x1, y1, x2, y2, 'rgba(255, 255, 255, 1)', this.lineWidth, false, 'lin', false));
+            this.lastEdited = Date.now();
+        }
+        else {
+            console.log("addLine from " + x1 + " " + y1 + " to " + x2 + " " + y2);
+            this.lines.push(new Shape(x1, y1, x2, y2, this.color, this.lineWidth, false, 'lin', false));
+            this.lines.push(new Shape(x2, y2, x2 + this.lineWidth / 4, y2 + this.lineWidth / 4, this.color, this.lineWidth / 2, true, 'cir', false));
+        }
         this.lastEdited = Date.now();
     }
     draw(ctx) {
@@ -100,7 +106,7 @@ window.addEventListener("mousedown", (e) => {
     selectedElement = null;
     prevX = e.clientX;
     prevY = e.clientY;
-    if (currentMode == 'bru') {
+    if (currentMode == 'bru' || currentMode == 'era') {
         shapes.push(new Brush(currentColor, currentlineW, true));
     }
     else if (currentMode == 'lin' || currentMode == 'rec' || currentMode == 'cir') {
@@ -120,7 +126,12 @@ window.addEventListener("mouseup", (e) => {
 window.addEventListener("mousemove", (e) => {
     if (Mousedown) {
         if (currentMode == 'bru' && shapes[shapes.length - 1] instanceof Brush) {
-            shapes[shapes.length - 1].addLine(prevX, prevY, e.clientX, e.clientY);
+            shapes[shapes.length - 1].addLine(prevX, prevY, e.clientX, e.clientY, false);
+            prevX = e.clientX;
+            prevY = e.clientY;
+        }
+        else if (currentMode == 'era' && shapes[shapes.length - 1] instanceof Brush) {
+            shapes[shapes.length - 1].addLine(prevX, prevY, e.clientX, e.clientY, true);
             prevX = e.clientX;
             prevY = e.clientY;
         }
@@ -140,16 +151,19 @@ window.addEventListener("mousemove", (e) => {
 });
 window.addEventListener("keydown", (e) => {
     if (e.key == 'b') {
-        currentMode = 'bru';
+        setMode('bru');
     }
     else if (e.key == 'l') {
-        currentMode = 'lin';
+        setMode('lin');
+    }
+    else if (e.key == 'e') {
+        setMode('era');
     }
     else if (e.key == 'r') {
-        currentMode = 'rec';
+        setMode('rec');
     }
     else if (e.key == 'c') {
-        currentMode = 'cir';
+        setMode('cir');
     }
     else if (e.key == 'f') {
         currentFill = !currentFill;
@@ -170,4 +184,15 @@ function drawShapes() {
         }
     }
 }
+function setMode(mode) {
+    currentMode = mode;
+}
+const saveButton = document.getElementById("saveButton");
+saveButton.addEventListener("click", (e) => {
+    console.log("saveButton clicked");
+    var link = document.createElement('a');
+    link.download = 'filename.png';
+    link.href = document.getElementById('canvas').toDataURL();
+    link.click();
+});
 //# sourceMappingURL=index.js.map

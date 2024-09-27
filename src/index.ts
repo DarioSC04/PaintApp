@@ -1,7 +1,6 @@
 //deklaration
 const canvas = document.getElementById("canvas") as HTMLCanvasElement;
-const body = document.querySelector('body') as HTMLBodyElement;
-body.style.backgroundColor = "#FFFFFF";
+const board = document.querySelector('main') as HTMLBodyElement;
 
 const ctx = canvas.getContext("2d");
 canvas.height = window.innerHeight;
@@ -11,7 +10,7 @@ canvas.width = window.innerWidth;
 var currentColor: string = '#FF0000';
 var currentlineW: number = 5;
 let currentFill: boolean = false;
-let currentMode: string = 'bru';
+let currentMode: string = '';
 let selectedElement: drawable | null = null;
 
 let prevX: number = -1;
@@ -120,10 +119,18 @@ class Brush extends drawable {
         super(color, lineWidth, drawMode);
     }
 
-    public addLine(x1: number, y1: number, x2: number, y2: number) {
-        console.log("addLine from " + x1 + " " + y1 + " to " + x2 + " " + y2);
-        this.lines.push(new Shape(x1, y1, x2, y2, this.color, this.lineWidth, false, 'lin', false));
-        this.lines.push(new Shape(x2, y2, x2 + this.lineWidth / 4, y2 + this.lineWidth / 4, this.color, this.lineWidth / 2, true, 'cir', false));
+    public addLine(x1: number, y1: number, x2: number, y2: number, eraser: boolean): void {
+        if(eraser){
+
+            console.log("erase");
+            this.lines.push(new Shape(x1, y1, x2, y2, 'rgba(255, 255, 255, 1)', this.lineWidth, false, 'lin', false));
+            this.lastEdited = Date.now();
+            
+        }else{
+            console.log("addLine from " + x1 + " " + y1 + " to " + x2 + " " + y2);
+            this.lines.push(new Shape(x1, y1, x2, y2, this.color, this.lineWidth, false, 'lin', false));
+            this.lines.push(new Shape(x2, y2, x2 + this.lineWidth / 4, y2 + this.lineWidth / 4, this.color, this.lineWidth / 2, true, 'cir', false));
+        }
         this.lastEdited = Date.now();
     }
 
@@ -146,7 +153,7 @@ window.addEventListener("mousedown", (e) =>{
     prevY = e.clientY;
 
 
-if(currentMode == 'bru'){
+if(currentMode == 'bru'||currentMode == 'era'){
         shapes.push(new Brush(currentColor, currentlineW, true));
     }else if(currentMode == 'lin' || currentMode == 'rec' || currentMode == 'cir'){
         shapes.push(new Shape(prevX, prevY, prevX, prevY, currentColor, currentlineW, currentFill, currentMode , false));
@@ -171,7 +178,14 @@ window.addEventListener("mousemove", (e) => {
     if (Mousedown) {
         if (currentMode == 'bru' && shapes[shapes.length - 1] instanceof Brush) {
 
-                (shapes[shapes.length-1] as Brush).addLine(prevX, prevY, e.clientX, e.clientY);
+                (shapes[shapes.length-1] as Brush).addLine(prevX, prevY, e.clientX, e.clientY,false);
+
+                prevX = e.clientX;
+                prevY = e.clientY;
+
+        }else if(currentMode == 'era' && shapes[shapes.length - 1] instanceof Brush) {
+
+                (shapes[shapes.length-1] as Brush).addLine(prevX, prevY, e.clientX, e.clientY,true);
 
                 prevX = e.clientX;
                 prevY = e.clientY;
@@ -193,13 +207,15 @@ window.addEventListener("mousemove", (e) => {
 
 window.addEventListener("keydown", (e) => {
     if (e.key == 'b') {
-        currentMode = 'bru';
+        setMode('bru');
     } else if (e.key == 'l') {
-        currentMode = 'lin';
-    } else if (e.key == 'r') {
-        currentMode = 'rec';
+        setMode('lin');
+    }  else if (e.key == 'e') {
+        setMode('era');
+    }else if (e.key == 'r') {
+        setMode('rec');
     } else if (e.key == 'c') {
-        currentMode = 'cir';
+        setMode('cir');
     } else if (e.key == 'f') {
         currentFill = !currentFill;
     } else if (e.key == 'ArrowUp') {
@@ -218,3 +234,18 @@ function drawShapes() {
             }
         }
 }
+
+function setMode(mode: string) {
+    currentMode = mode;
+    //buttons hervorheben
+}
+
+
+const saveButton = document.getElementById("saveButton") as HTMLButtonElement;
+saveButton.addEventListener("click", (e) => {
+    console.log("saveButton clicked");
+    var link = document.createElement('a');
+    link.download = 'filename.png';
+    link.href = (document.getElementById('canvas') as HTMLCanvasElement).toDataURL()
+    link.click();
+})

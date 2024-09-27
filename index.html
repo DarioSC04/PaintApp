@@ -2,45 +2,41 @@
 <head>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://use.typekit.net/pwx1zcb.css">
+  <script defer src="dist/index.js" ></script>
 
 </head>
-
-<nav>
-  <div2 class= align-center> <h1 style="color: white;"> Photoshop </h1> </div2>
-  <div2 class= align-right> <input type="button" id="savebutton" value="Speichern"> </div2>
-</nav>
-  <section>
-    <aside>
-      <h2 style="color: white ">Funktion wählen:</h2>
+<body>
+  <nav id="nav">
+    <div2 class= align-center> <h1 style="color: white;"> Photoshop </h1> </div2>
+    <div2 class= align-right> <button  id="savebutton" >Speichern</button> </div2>
+  </nav>
+    <section>
+      <aside id="aside">
+        <h2 style="color: white ">Funktion wählen:</h2>
+        
+        <p style="color: white">Brush:</p>
+        <div class= "tools"> 
+          <input type="image" src="Tools/paint-brush.png" name="brushbutton" id="brushbutton" style="width:30px;"/>
+          <input type="image" src="Tools/rubber.png" name="rubberbutton" id="rubberbutton"  style="width:30px;"/>
+        </div>
       
-      <p style="color: white">Brush:</p>
-      <div class= "tools"> 
-        <input type="image" src="Tools/paint-brush.png" name="brushbutton" id="brushbutton" style="width:30px;"/>
-        <input type="image" src="Tools/rubber.png" name="rubberbutton" id="rubberbutton"  style="width:30px;"/>
-      </div>
-    
-      <p style="color: white">Shape's:</p>
-      <div class= "forms"> 
-        <input type="image" src="Forms/circle.png" name="circlebutton" id="circlebutton"  style="width:30px;"/>
-        <input type="image" src="Forms/line.png" name="linebutton" id="linebutton" style="width:30px;"/>
-        <input type="image" src="Forms/recktangle.png" name="recktanglebutton" id="recktanglebutton" style="width:30px;"/>
-      </div>
-    
-      <p style="color: white">Color's:</p>
-      <div class="color">
-        <input type="image" src="Color Images/blue-button-0000ff.png" name="bluebutton" id="bluebutton" style="width:30px;"/>
-        <input type="image" src="Color Images/green-button-009b00.png" name="greenbutton" id="greenbutton" style="width:30px;"/>
-        <input type="image" src="Color Images/pink-button-f200ff.png" name="pinkbutton" id="pinkbutton" style="width:30px;"/>
-        <input type="image" src="Color Images/red-button-ff0000.png" name="redbutton" id="redbutton"  style="width:30px;"/>
-        <input type="image" src="Color Images/yellow-button-ffe000.png" name="yellowbutton" id="yellowbutton" style="width:30px;"/>
-      </div>
-    </aside>
-    
-    <main>
-      <div class= "main">
-    
-      </div>
-    </main>
-  </section>
-
-
+        <p style="color: white">Shape's:</p>
+        <div class= "forms"> 
+          <input type="image" src="Forms/circle.png" name="circlebutton" id="circlebutton"  style="width:30px;"/>
+          <input type="image" src="Forms/line.png" name="linebutton" id="linebutton" style="width:30px;"/>
+          <input type="image" src="Forms/recktangle.png" name="recktanglebutton" id="recktanglebutton" style="width:30px;"/>
+        </div>
+      
+        <p style="color: white">Color's:</p>
+        <div class="color">
+          <input type="image" src="Color Images/blue-button-0000ff.png" name="bluebutton" id="bluebutton" style="width:30px;"/>
+          <input type="image" src="Color Images/green-button-009b00.png" name="greenbutton" id="greenbutton" style="width:30px;"/>
+          <input type="image" src="Color Images/pink-button-f200ff.png" name="pinkbutton" id="pinkbutton" style="width:30px;"/>
+          <input type="image" src="Color Images/red-button-ff0000.png" name="redbutton" id="redbutton"  style="width:30px;"/>
+          <input type="image" src="Color Images/yellow-button-ffe000.png" name="yellowbutton" id="yellowbutton" style="width:30px;"/>
+        </div>
+      </aside>
+      
+        <canvas id="canvas"></canvas>
+    </section>
+</body>
