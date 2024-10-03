@@ -206,7 +206,6 @@ window.addEventListener("keydown", (e) => {
     }
 });
 function drawShapes() {
-    console.info("drawShapes" + shapes.length);
     if (ctx) {
         ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
         for (let i = 0; i < shapes.length; i++) {
@@ -241,6 +240,11 @@ function redo() {
         drawShapes();
     }
 }
+window.addEventListener("resize", (e) => {
+    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth;
+    drawShapes();
+});
 const saveButton = document.getElementById("saveButton");
 saveButton.addEventListener("click", (e) => {
     console.log("saveButton clicked");
@@ -268,20 +272,6 @@ rectangleButton.addEventListener("click", (e) => {
 const eraserButton = document.getElementById("rubberButton");
 eraserButton.addEventListener("click", (e) => {
     setMode('era');
-    currentColor = '#FF0000';
-    for (let x = 0; x < window.innerWidth; x = x + 4) {
-        for (let y = 0; y < window.innerHeight; y = y + 4) {
-            for (let i = 0; i < shapes.length; i++) {
-                if (shapes[i].isInside(x, y)) {
-                    console.log("isInside " + x + " " + y);
-                    ctx.beginPath();
-                    ctx.arc(x, y, 2, 0, Math.PI * 2);
-                    ctx.fillStyle = '#FF0000';
-                    ctx.fill();
-                }
-            }
-        }
-    }
 });
 const blueButton = document.getElementById("blueButton");
 blueButton.addEventListener("click", (e) => {

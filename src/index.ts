@@ -19,7 +19,6 @@ let Mousedown: boolean = false;
 
 let shapes: drawable[] = [];
 let undoStack: drawable[] = [];
-
 abstract class drawable {
 
     public color: string;
@@ -256,7 +255,7 @@ window.addEventListener("keydown", (e) => {
 })
 
 function drawShapes() {
-    console.info("drawShapes" + shapes.length);
+
         if (ctx) {
             ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
             for (let i = 0; i < shapes.length; i++) {
@@ -298,6 +297,12 @@ function redo() {
         drawShapes();
     }
 }
+
+window.addEventListener("resize", (e) => {
+    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth;
+    drawShapes();
+});
 
 const saveButton = document.getElementById("saveButton") as HTMLElement;
 saveButton.addEventListener("click", (e) => {
