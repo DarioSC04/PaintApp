@@ -2,15 +2,14 @@
 const canvas = document.getElementById("canvas") as HTMLCanvasElement;
 const board = document.querySelector('main') as HTMLBodyElement;
 
-const ctx = canvas.getContext("2d");
+const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
 canvas.height = window.innerHeight;
 canvas.width = window.innerWidth;
 
-
-var currentColor: string = '#FF0000';
+var currentColor: string = '#000000';
 var currentlineW: number = 5;
 let currentFill: boolean = false;
-let currentMode: string = '';
+let currentMode: string = 'bru';
 let selectedElement: drawable | null = null;
 
 let prevX: number = -1;
@@ -19,6 +18,7 @@ let Mousedown: boolean = false;
 
 
 let shapes: drawable[] = [];
+let undoStack: drawable[] = [];
 
 abstract class drawable {
 
@@ -36,6 +36,10 @@ abstract class drawable {
 
     public getLastEdited(): number {
         return this.lastEdited;
+    }
+
+    public setLastEditedNow(): void {
+        this.lastEdited = Date.now();
     }
 
     abstract draw(ctx: CanvasRenderingContext2D): void;
@@ -103,8 +107,11 @@ class Shape extends drawable {
             case 'cir':
                 return Math.sqrt((x - this.startX) ** 2 + (y - this.startY) ** 2) < Math.sqrt((this.endX - this.startX) ** 2 + (this.endY - this.startY) ** 2);
             case 'lin':
-                const distance = Math.abs((this.endY - this.startY) * x - (this.endX - this.startX) * y + this.endX * this.startY - this.endY * this.startX) / Math.sqrt((this.endY - this.startY) ** 2 + (this.endX - this.startX) ** 2);
-                return distance <= this.lineWidth / 2;
+                const distance: number = Math.abs((this.endY - this.startY) * x - (this.endX - this.startX) * y + this.endX * this.startY - this.endY * this.startX) / Math.sqrt((this.endY - this.startY) ** 2 + (this.endX - this.startX) ** 2);
+
+                const isBetweenPoints: boolean = x >= Math.min(this.startX, this.endX) && x <= Math.max(this.startX, this.endX) && y >= Math.min(this.startY, this.endY) && y <= Math.max(this.startY, this.endY);;
+                
+                return distance <= this.lineWidth / 2 && isBetweenPoints;
         }
         return false;
     }
@@ -141,9 +148,16 @@ class Brush extends drawable {
     }
 
     isInside(x: number, y: number): boolean {
+        for (let i = 0; i < this.lines.length; i++) {
+            if (this.lines[i].isInside(x, y)) {
+                return true;
+            }
+        }
+
         return false;
     }
 }
+
 
 window.addEventListener("mousedown", (e) =>{
     Mousedown = true;
@@ -153,7 +167,7 @@ window.addEventListener("mousedown", (e) =>{
     prevY = e.clientY;
 
 
-if(currentMode == 'bru'||currentMode == 'era'){
+if(currentMode == 'bru'){
         shapes.push(new Brush(currentColor, currentlineW, true));
     }else if(currentMode == 'lin' || currentMode == 'rec' || currentMode == 'cir'){
         shapes.push(new Shape(prevX, prevY, prevX, prevY, currentColor, currentlineW, currentFill, currentMode , false));
@@ -183,10 +197,17 @@ window.addEventListener("mousemove", (e) => {
                 prevX = e.clientX;
                 prevY = e.clientY;
 
-        }else if(currentMode == 'era' && shapes[shapes.length - 1] instanceof Brush) {
+        }else if(currentMode == 'era') {
 
-                (shapes[shapes.length-1] as Brush).addLine(prevX, prevY, e.clientX, e.clientY,true);
-
+                console.log("erase");
+                for (let i = 0; i < shapes.length; i++) {
+                    if (shapes[i].isInside(e.clientX, e.clientY)) {
+                        shapes[i].setLastEditedNow();
+                        undoStack.push(shapes[i]);
+                        shapes.splice(i, 1);
+                    }
+                }
+            
                 prevX = e.clientX;
                 prevY = e.clientY;
 
@@ -222,7 +243,16 @@ window.addEventListener("keydown", (e) => {
         currentlineW += 1;
     } else if (e.key == 'ArrowDown') {
         currentlineW -= 1;
-    } 
+    } else if (e.ctrlKey && e.key == 's') {
+        e.preventDefault();
+        saveButton.click();
+    }else if (e.ctrlKey && e.key == 'z') {
+        e.preventDefault();
+        undo();
+    } else if (e.ctrlKey && e.key == 'y') {
+        e.preventDefault();
+        redo();
+    }
 })
 
 function drawShapes() {
@@ -240,8 +270,36 @@ function setMode(mode: string) {
     //buttons hervorheben
 }
 
+function setColorCustom(color: string) {
+    currentColor = color;
+}
 
-const saveButton = document.getElementById("saveButton") as HTMLButtonElement;
+function setColorButton(button: String) {
+    if (button == 'blueButton') {
+        currentColor = '#0000FF';
+    }
+    //buttons hervorheben
+}
+
+function undo() {
+    if (shapes.length > 0) {
+        let shape = shapes.pop() as drawable
+        shape.setLastEditedNow();
+        undoStack.push(shape);
+        drawShapes();
+    }
+}
+
+function redo() {
+    if (undoStack.length > 0) {
+        let shape = undoStack.pop() as drawable
+        shape.setLastEditedNow();
+        shapes.push(shape);
+        drawShapes();
+    }
+}
+
+const saveButton = document.getElementById("saveButton") as HTMLElement;
 saveButton.addEventListener("click", (e) => {
     console.log("saveButton clicked");
     var link = document.createElement('a');
@@ -249,3 +307,73 @@ saveButton.addEventListener("click", (e) => {
     link.href = (document.getElementById('canvas') as HTMLCanvasElement).toDataURL()
     link.click();
 })
+
+const brushButton = document.getElementById("brushButton") as HTMLElement;
+brushButton.addEventListener("click", (e) => {
+    setMode('bru');
+})
+
+const lineButton = document.getElementById("lineButton") as HTMLElement;
+lineButton.addEventListener("click", (e) => {
+    setMode('lin');
+})
+
+
+const circleButton = document.getElementById("circleButton") as HTMLElement;
+circleButton.addEventListener("click", (e) => {
+    setMode('cir');
+})
+
+const rectangleButton = document.getElementById("rectangleButton") as HTMLElement;
+rectangleButton.addEventListener("click", (e) => {
+    setMode('rec');
+})
+
+const eraserButton = document.getElementById("rubberButton") as HTMLElement;
+eraserButton.addEventListener("click", (e) => {
+   setMode('era');
+
+    //    //test
+    //     currentColor = '#FF0000';
+    //    for (let x = 0; x < window.innerWidth; x=x+4) {
+    //     for (let y = 0; y < window.innerHeight; y=y+4) {
+    //         for (let i = 0; i < shapes.length; i++) {
+    //             if (shapes[i].isInside(x, y)) {
+    //                 console.log("isInside " + x + " " + y);
+    //                 ctx.beginPath();
+    //                 ctx.arc(x, y, 2, 0, Math.PI * 2);
+    //                 ctx.fillStyle = '#FF0000';
+    //                 ctx.fill();
+    //             }
+    //         }
+    //     }
+    // }
+
+})
+
+const blueButton = document.getElementById("blueButton") as HTMLElement;
+blueButton.addEventListener("click", (e) => {
+    setColorButton('blueButton');
+})
+
+const redButton = document.getElementById("redButton") as HTMLElement;
+redButton.addEventListener("click", (e) => {
+    setColorCustom('#FF0000');
+})
+
+const greenButton = document.getElementById("greenButton") as HTMLElement;
+greenButton.addEventListener("click", (e) => {
+    setColorCustom('#009b00');
+})
+
+const pinkButton = document.getElementById("pinkButton") as HTMLElement;
+pinkButton.addEventListener("click", (e) => {
+    setColorCustom('#f200ff');
+})
+
+const yellowButton = document.getElementById("yellowButton") as HTMLElement;
+yellowButton.addEventListener("click", (e) => {
+    setColorCustom('#ffe000');
+})
+
+
