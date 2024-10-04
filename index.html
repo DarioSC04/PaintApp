@@ -19,7 +19,7 @@
         <div class= "tools">
           <input type="image" src="Tools/paint-brush.png" name="brushbutton" id="brushButton"/>
           <input type="image" src="Tools/rubber.png" name="rubberbutton" id="rubberButton"/>
-          <h3>Dicke einstellen: <input type="range" id="slider" name="slider" min="0" max="10" value="5"> <span id="sliderValue">5</span>
+          <h3>Dicke einstellen: <input type="range" id="slider" name="slider" min="1" max="15" value="5"> <span id="sliderValue">5</span  >
 
           
         </div>
@@ -39,8 +39,8 @@
       
         <p>Farbe wählen:</p> 
         <div class="color"> 
-          <h3><input type="color" id="colorPicker" name="colorPicker" value="#ff0000">
-            <span id="colorValue">#ff0000</span></h3>
+          <h3><input type="color" id="colorPicker" name="colorPicker" value="#000000">
+            <span id="colorValue">#000000</span></h3>
          <input type="image" src="Color Images/blue-button-0000ff.png" name="blueButton" id="blueButton"/>
           <input type="image" src="Color Images/green-button-009b00.png" name="greenButton" id="greenButton"/>
           <input type="image" src="Color Images/pink-button-f200ff.png" name="pinkButton" id="pinkButton"/>
@@ -48,32 +48,6 @@
           <input type="image" src="Color Images/yellow-button-ffe000.png" name="yellowButton" id="yellowButton"/>
         </div>
         
-
-  
-        
-  
-        
-          <script>
-            // JavaScript zur Anzeige des aktuellen Wertes
-            const slider = document.getElementById("slider");
-            const output = document.getElementById("sliderValue");
-        
-            slider.oninput = function() {
-              output.textContent = this.value;
-            };
-          </script>
-       
-        <script>
-          /* const colorPicker = document.getElementById("colorPicker");
-          const colorValue = document.getElementById("colorValue");
-      
-          colorPicker.oninput = function() {
-            colorValue.textContent = this.value;
-            document.body.style.backgroundColor = this.value; // Hintergrundfarbe ändert sich
-          }; */ 
-        </script>
-
-
       </aside>
         <canvas id="canvas"></canvas>
 </body>

@@ -271,14 +271,10 @@ function setMode(mode: string) {
 
 function setColorCustom(color: string) {
     currentColor = color;
+    colorPicker.value = color;
+    colorValue.innerText = color;
 }
 
-function setColorButton(button: String) {
-    if (button == 'blueButton') {
-        currentColor = '#0000FF';
-    }
-    //buttons hervorheben
-}
 
 function undo() {
     if (shapes.length > 0) {
@@ -329,7 +325,7 @@ circleButton.addEventListener("click", (e) => {
     setMode('cir');
 })
 
-const rectangleButton = document.getElementById("rectangleButton") as HTMLElement;
+const rectangleButton = document.getElementById("recktangleButton") as HTMLElement;
 rectangleButton.addEventListener("click", (e) => {
     setMode('rec');
 })
@@ -358,7 +354,7 @@ eraserButton.addEventListener("click", (e) => {
 
 const blueButton = document.getElementById("blueButton") as HTMLElement;
 blueButton.addEventListener("click", (e) => {
-    setColorButton('blueButton');
+    setColorCustom('#0000FF');
 })
 
 const redButton = document.getElementById("redButton") as HTMLElement;
@@ -381,4 +377,26 @@ yellowButton.addEventListener("click", (e) => {
     setColorCustom('#ffe000');
 })
 
+const undoButton = document.getElementById("undoButton") as HTMLElement;
+undoButton.addEventListener("click", (e) => {
+    undo();
+    undo();
+});
 
+const redoButton = document.getElementById("redoButton") as HTMLElement;
+redoButton.addEventListener("click", (e) => {
+    redo();
+});
+
+const colorPicker = document.getElementById("colorPicker") as HTMLInputElement;
+const colorValue = document.getElementById("colorValue") as HTMLSpanElement;
+colorPicker.addEventListener("input", (e) => {
+    setColorCustom(colorPicker.value);
+})
+
+const slider = document.getElementById("slider") as HTMLInputElement;
+const sliderValue = document.getElementById("sliderValue") as HTMLSpanElement;
+slider.addEventListener("input", (e) => {
+    sliderValue.innerText = slider.value;
+    currentlineW = parseInt(slider.value);
+})

@@ -218,11 +218,8 @@ function setMode(mode) {
 }
 function setColorCustom(color) {
     currentColor = color;
-}
-function setColorButton(button) {
-    if (button == 'blueButton') {
-        currentColor = '#0000FF';
-    }
+    colorPicker.value = color;
+    colorValue.innerText = color;
 }
 function undo() {
     if (shapes.length > 0) {
@@ -275,7 +272,7 @@ eraserButton.addEventListener("click", (e) => {
 });
 const blueButton = document.getElementById("blueButton");
 blueButton.addEventListener("click", (e) => {
-    setColorButton('blueButton');
+    setColorCustom('#0000FF');
 });
 const redButton = document.getElementById("redButton");
 redButton.addEventListener("click", (e) => {
@@ -293,21 +290,24 @@ const yellowButton = document.getElementById("yellowButton");
 yellowButton.addEventListener("click", (e) => {
     setColorCustom('#ffe000');
 });
-
-//# sourceMappingURL=index.js.map
-
-/* <script>
-/* const colorPicker = document.getElementById("colorPicker");
-const colorValue = document.getElementById("colorValue");
-
-colorPicker.oninput = function() {
-  colorValue.textContent = this.value;
-  document.body.style.backgroundColor = this.value; // Hintergrundfarbe ändert sich
-};
-</script> 
+const undoButton = document.getElementById("undoButton");
+undoButton.addEventListener("click", (e) => {
+    undo();
+    undo();
+});
+const redoButton = document.getElementById("redoButton");
+redoButton.addEventListener("click", (e) => {
+    redo();
+});
 const colorPicker = document.getElementById("colorPicker");
-const colorValue = document.getElementById("colorValue"); 
-
-colorPicker.addEventListener("click", (e) => {
- setColorCustom(this.value)
-}) */ 
+const colorValue = document.getElementById("colorValue");
+colorPicker.addEventListener("input", (e) => {
+    setColorCustom(colorPicker.value);
+});
+const slider = document.getElementById("slider");
+const sliderValue = document.getElementById("sliderValue");
+slider.addEventListener("input", (e) => {
+    sliderValue.innerText = slider.value;
+    currentlineW = parseInt(slider.value);
+});
+//# sourceMappingURL=index.js.map
