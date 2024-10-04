@@ -8,7 +8,6 @@ var currentColor = '#000000';
 var currentlineW = 5;
 let currentFill = false;
 let currentMode = 'bru';
-let selectedElement = null;
 let prevX = -1;
 let prevY = -1;
 let Mousedown = false;
@@ -85,17 +84,11 @@ class Brush extends drawable {
         super(color, lineWidth, drawMode);
         this.lines = [];
     }
-    addLine(x1, y1, x2, y2, eraser) {
-        if (eraser) {
-            console.log("erase");
-            this.lines.push(new Shape(x1, y1, x2, y2, 'rgba(255, 255, 255, 1)', this.lineWidth, false, 'lin', false));
-            this.lastEdited = Date.now();
-        }
-        else {
-            console.log("addLine from " + x1 + " " + y1 + " to " + x2 + " " + y2);
-            this.lines.push(new Shape(x1, y1, x2, y2, this.color, this.lineWidth, false, 'lin', false));
-            this.lines.push(new Shape(x2, y2, x2 + this.lineWidth / 4, y2 + this.lineWidth / 4, this.color, this.lineWidth / 2, true, 'cir', false));
-        }
+    addLine(x1, y1, x2, y2) {
+        console.log("addLine from " + x1 + " " + y1 + " to " + x2 + " " + y2);
+        this.lines.push(new Shape(x1, y1, x2, y2, this.color, this.lineWidth, false, 'lin', false));
+        var circleRadius = 0.3928 * this.lineWidth - 0.444;
+        this.lines.push(new Shape(x2, y2, x2 + circleRadius, y2 + circleRadius, this.color, 1, true, 'cir', false));
         this.lastEdited = Date.now();
     }
     draw(ctx) {
@@ -112,9 +105,13 @@ class Brush extends drawable {
         return false;
     }
 }
+const nav = document.querySelector('nav');
+const aside = document.querySelector('aside');
 window.addEventListener("mousedown", (e) => {
+    if (e.clientX < aside.clientWidth || e.clientY < nav.clientHeight) {
+        return;
+    }
     Mousedown = true;
-    selectedElement = null;
     prevX = e.clientX;
     prevY = e.clientY;
     if (currentMode == 'bru') {
@@ -135,9 +132,12 @@ window.addEventListener("mouseup", (e) => {
     prevY = -1;
 });
 window.addEventListener("mousemove", (e) => {
+    if (e.clientX < aside.clientWidth || e.clientY < nav.clientHeight) {
+        return;
+    }
     if (Mousedown) {
         if (currentMode == 'bru' && shapes[shapes.length - 1] instanceof Brush) {
-            shapes[shapes.length - 1].addLine(prevX, prevY, e.clientX, e.clientY, false);
+            shapes[shapes.length - 1].addLine(prevX, prevY, e.clientX, e.clientY);
             prevX = e.clientX;
             prevY = e.clientY;
         }
@@ -292,7 +292,6 @@ yellowButton.addEventListener("click", (e) => {
 });
 const undoButton = document.getElementById("undoButton");
 undoButton.addEventListener("click", (e) => {
-    undo();
     undo();
 });
 const redoButton = document.getElementById("redoButton");

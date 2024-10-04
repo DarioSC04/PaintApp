@@ -10,7 +10,6 @@ var currentColor: string = '#000000';
 var currentlineW: number = 5;
 let currentFill: boolean = false;
 let currentMode: string = 'bru';
-let selectedElement: drawable | null = null;
 
 let prevX: number = -1;
 let prevY: number = -1;
@@ -125,18 +124,13 @@ class Brush extends drawable {
         super(color, lineWidth, drawMode);
     }
 
-    public addLine(x1: number, y1: number, x2: number, y2: number, eraser: boolean): void {
-        if(eraser){
-
-            console.log("erase");
-            this.lines.push(new Shape(x1, y1, x2, y2, 'rgba(255, 255, 255, 1)', this.lineWidth, false, 'lin', false));
-            this.lastEdited = Date.now();
-            
-        }else{
+    public addLine(x1: number, y1: number, x2: number, y2: number): void {
+        
             console.log("addLine from " + x1 + " " + y1 + " to " + x2 + " " + y2);
             this.lines.push(new Shape(x1, y1, x2, y2, this.color, this.lineWidth, false, 'lin', false));
-            this.lines.push(new Shape(x2, y2, x2 + this.lineWidth / 4, y2 + this.lineWidth / 4, this.color, this.lineWidth / 2, true, 'cir', false));
-        }
+            var circleRadius = 0.3928 * this.lineWidth - 0.444; // mithilfe einer ausgleichsgerade berechnet
+            this.lines.push(new Shape(x2, y2, x2 + circleRadius, y2 + circleRadius, this.color, 1 , true, 'cir', false));
+        
         this.lastEdited = Date.now();
     }
 
@@ -157,10 +151,16 @@ class Brush extends drawable {
     }
 }
 
+const nav = document.querySelector('nav') as HTMLElement;
+const aside = document.querySelector('aside') as HTMLElement;
 
 window.addEventListener("mousedown", (e) =>{
+
+    if(e.clientX < aside.clientWidth || e.clientY < nav.clientHeight){
+        return;
+    }
+
     Mousedown = true;
-    selectedElement = null;
 
     prevX = e.clientX;
     prevY = e.clientY;
@@ -188,10 +188,15 @@ window.addEventListener("mouseup", (e) =>{
 })
 
 window.addEventListener("mousemove", (e) => {
+
+    if(e.clientX < aside.clientWidth || e.clientY < nav.clientHeight){
+        return;
+    }
+
     if (Mousedown) {
         if (currentMode == 'bru' && shapes[shapes.length - 1] instanceof Brush) {
 
-                (shapes[shapes.length-1] as Brush).addLine(prevX, prevY, e.clientX, e.clientY,false);
+                (shapes[shapes.length-1] as Brush).addLine(prevX, prevY, e.clientX, e.clientY);
 
                 prevX = e.clientX;
                 prevY = e.clientY;
@@ -379,7 +384,6 @@ yellowButton.addEventListener("click", (e) => {
 
 const undoButton = document.getElementById("undoButton") as HTMLElement;
 undoButton.addEventListener("click", (e) => {
-    undo();
     undo();
 });
 
