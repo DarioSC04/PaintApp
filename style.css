@@ -20,11 +20,7 @@ nav {
   align-items: center; 
   justify-content: space-between;
   display: flex;
-
-  padding-left: 20px;
-  padding-right: 20px; 
   position: fixed;
-
 }
 
 nav:hover{
@@ -41,6 +37,7 @@ aside {
   background: #535353;
   height: 100%;
 
+  margin-top: 4rem;
   padding-left: 20px;
   padding-right: 20px; 
 
@@ -90,7 +87,7 @@ margin-top: -10px;
   font-size: 16px;          /* Schriftgröße */
   font-family: adobe-clean;
   cursor: pointer;          /* Mauszeiger wird zum Zeiger (wie bei Links) */
-
+  margin-right: 20px;
 }
 
 #savebutton:hover {
@@ -101,6 +98,8 @@ h1 {
   font-family: adobe-clean;
 font-weight: 300;
 font-style: normal;
+color: white; 
+margin-left: 20px; 
 }
 
 h2 {
@@ -108,10 +107,27 @@ h2 {
   font-weight: 700;
   font-style: normal;
   font-size: 16px;
+  color: white;
 }
 
 p {
   font-family: adobe-clean;
 font-weight: 300;
 font-style: normal;
+color: white
+}
+
+h3 {
+font-family: adobe-clean;
+font-size: 14px;
+font-weight: 300;
+font-style: normal;
+color: white
+}
+#pinkButton, #yellowButton, #redButton, #blueButton, #greenButton, #circleButton, #lineButton, #brushButton, #rubberButton, #recktanglebutton, #undoButton, #redoButton {
+width: 30px;
+}
+
+#slider {
+width: 4rem; 
 }

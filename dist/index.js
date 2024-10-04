@@ -265,7 +265,7 @@ const circleButton = document.getElementById("circleButton");
 circleButton.addEventListener("click", (e) => {
     setMode('cir');
 });
-const rectangleButton = document.getElementById("rectangleButton");
+const rectangleButton = document.getElementById("recktangleButton");
 rectangleButton.addEventListener("click", (e) => {
     setMode('rec');
 });
@@ -293,4 +293,21 @@ const yellowButton = document.getElementById("yellowButton");
 yellowButton.addEventListener("click", (e) => {
     setColorCustom('#ffe000');
 });
+
 //# sourceMappingURL=index.js.map
+
+/* <script>
+/* const colorPicker = document.getElementById("colorPicker");
+const colorValue = document.getElementById("colorValue");
+
+colorPicker.oninput = function() {
+  colorValue.textContent = this.value;
+  document.body.style.backgroundColor = this.value; // Hintergrundfarbe ändert sich
+};
+</script> 
+const colorPicker = document.getElementById("colorPicker");
+const colorValue = document.getElementById("colorValue"); 
+
+colorPicker.addEventListener("click", (e) => {
+ setColorCustom(this.value)
+}) */ 

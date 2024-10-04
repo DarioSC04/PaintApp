@@ -9,34 +9,71 @@
 </head>
 <body>
   <nav id="nav">
-    <div2 class= align-center> <h1 style="color: white;"> Photoshop </h1> </div2>
+    <div2 class= align-center> <h1> Photoshop </h1> </div2>
     <div2 class= align-right> <button  id="saveButton" >Speichern</button> </div2>
   </nav>
       <aside id="aside">
-        <h2 style="color: white ">Funktion wählen:</h2>
+        <h2>Funktion wählen:</h2>
         
-        <p style="color: white">Brush:</p>
+        <p>Brush:</p>
         <div class= "tools">
-          <input type="image" src="Tools/paint-brush.png" name="brushbutton" id="brushButton" style="width:30px;"/>
-          <input type="image" src="Tools/rubber.png" name="rubberbutton" id="rubberButton"  style="width:30px;"/>
+          <input type="image" src="Tools/paint-brush.png" name="brushbutton" id="brushButton"/>
+          <input type="image" src="Tools/rubber.png" name="rubberbutton" id="rubberButton"/>
+          <h3>Dicke einstellen: <input type="range" id="slider" name="slider" min="0" max="10" value="5"> <span id="sliderValue">5</span>
+
+          
         </div>
-      
-        <p style="color: white">Shape's:</p>
-        <div class= "forms"> 
-          <input type="image" src="Forms/circle.png" name="circlebutton" id="circleButton"  style="width:30px;"/>
-          <input type="image" src="Forms/line.png" name="linebutton" id="lineButton" style="width:30px;"/>
-          <input type="image" src="Forms/recktangle.png" name="recktanglebutton" id="rectangleButton" style="width:30px;"/>
-        </div>
-      
-        <p style="color: white">Color's:</p>
+
+        <p>Un/Redo:</p>
         <div class="color">
-          <input type="image" src="Color Images/blue-button-0000ff.png" name="blueButton" id="blueButton" style="width:30px;"/>
-          <input type="image" src="Color Images/green-button-009b00.png" name="greenButton" id="greenButton" style="width:30px;"/>
-          <input type="image" src="Color Images/pink-button-f200ff.png" name="pinkButton" id="pinkButton" style="width:30px;"/>
-          <input type="image" src="Color Images/red-button-ff0000.png" name="redButton" id="redButton"  style="width:30px;"/>
-          <input type="image" src="Color Images/yellow-button-ffe000.png" name="yellowButton" id="yellowButton" style="width:30px;"/>
+          <input type="image" src="Tools/UndoButton.png" name="undoButton" id="undoButton"/>
+          <input type="image" src="Tools/RedoButton.png" name="redoButton" id="redoButton"/>
         </div>
+      
+        <p>Shape's:</p>
+        <div class= "forms"> 
+          <input type="image" src="Shape/circle.png" name="circlebutton" id="circleButton"/>
+          <input type="image" src="Shape/line.png" name="linebutton" id="lineButton"/>
+          <input type="image" src="Shape/recktangle.png" name="recktanglebutton" id="recktangleButton" />
+        </div>
+      
+        <p>Farbe wählen:</p> 
+        <div class="color"> 
+          <h3><input type="color" id="colorPicker" name="colorPicker" value="#ff0000">
+            <span id="colorValue">#ff0000</span></h3>
+         <input type="image" src="Color Images/blue-button-0000ff.png" name="blueButton" id="blueButton"/>
+          <input type="image" src="Color Images/green-button-009b00.png" name="greenButton" id="greenButton"/>
+          <input type="image" src="Color Images/pink-button-f200ff.png" name="pinkButton" id="pinkButton"/>
+          <input type="image" src="Color Images/red-button-ff0000.png" name="redButton" id="redButton" />
+          <input type="image" src="Color Images/yellow-button-ffe000.png" name="yellowButton" id="yellowButton"/>
+        </div>
+        
+
+  
+        
+  
+        
+          <script>
+            // JavaScript zur Anzeige des aktuellen Wertes
+            const slider = document.getElementById("slider");
+            const output = document.getElementById("sliderValue");
+        
+            slider.oninput = function() {
+              output.textContent = this.value;
+            };
+          </script>
+       
+        <script>
+          /* const colorPicker = document.getElementById("colorPicker");
+          const colorValue = document.getElementById("colorValue");
+      
+          colorPicker.oninput = function() {
+            colorValue.textContent = this.value;
+            document.body.style.backgroundColor = this.value; // Hintergrundfarbe ändert sich
+          }; */ 
+        </script>
+
+
       </aside>
         <canvas id="canvas"></canvas>
-        
 </body>
