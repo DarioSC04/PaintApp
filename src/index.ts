@@ -15,8 +15,12 @@ let prevX: number = -1;
 let prevY: number = -1;
 let Mousedown: boolean = false;
 
+const keyLokalStorage = 'drawShapes';
 
 let shapes: drawable[] = [];
+
+
+
 let undoStack: drawable[] = [];
 abstract class drawable {
 
@@ -118,7 +122,7 @@ class Shape extends drawable {
 
 class Brush extends drawable {
 
-    private lines: Shape[] = [];
+    public lines: Shape[] = [];
 
     constructor(color: string, lineWidth: number, drawMode: boolean) {
         super(color, lineWidth, drawMode);
@@ -261,12 +265,32 @@ window.addEventListener("keydown", (e) => {
 
 function drawShapes() {
 
-        if (ctx) {
-            ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-            for (let i = 0; i < shapes.length; i++) {
-                shapes[i].draw(ctx);
+    localStorage.setItem(keyLokalStorage, JSON.stringify(shapes));
+    ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+    for (let i = 0; i < shapes.length; i++) {
+        shapes[i].draw(ctx);
+    }
+
+        
+}
+
+function shapesFromJSON(shapesJSON: any[]): drawable[] {
+    let shapes: drawable[] = [];
+
+    for (let i = 0; i < shapesJSON.length; i++) {
+        let shape = shapesJSON[i];
+        if (shape.shape) {
+            shapes.push(new Shape(shape.startX, shape.startY, shape.endX, shape.endY, shape.color, shape.lineWidth, shape.fill, shape.shape, shape.drawMode));
+        }else{
+             let brush = new Brush(shape.color, shape.lineWidth, shape.drawMode);
+            for (let j = 0; j < shape.lines.length; j++) {
+                let line = shape.lines[j];
+                brush.lines.push(new Shape(line.startX, line.startY, line.endX, line.endY, line.color, line.lineWidth, line.fill, line.shape, line.drawMode));
             }
+            shapes.push(brush);
         }
+    }
+    return shapes;
 }
 
 function setMode(mode: string) {
@@ -404,3 +428,9 @@ slider.addEventListener("input", (e) => {
     sliderValue.innerText = slider.value;
     currentlineW = parseInt(slider.value);
 })
+
+if (localStorage.getItem(keyLokalStorage)) {
+    let shapesJSON = JSON.parse(localStorage.getItem(keyLokalStorage) as string);
+    shapes = shapesFromJSON(shapesJSON);
+    drawShapes();
+}

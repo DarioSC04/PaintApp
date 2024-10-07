@@ -11,6 +11,7 @@ let currentMode = 'bru';
 let prevX = -1;
 let prevY = -1;
 let Mousedown = false;
+const keyLokalStorage = 'drawShapes';
 let shapes = [];
 let undoStack = [];
 class drawable {
@@ -206,12 +207,29 @@ window.addEventListener("keydown", (e) => {
     }
 });
 function drawShapes() {
-    if (ctx) {
-        ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-        for (let i = 0; i < shapes.length; i++) {
-            shapes[i].draw(ctx);
+    localStorage.setItem(keyLokalStorage, JSON.stringify(shapes));
+    ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+    for (let i = 0; i < shapes.length; i++) {
+        shapes[i].draw(ctx);
+    }
+}
+function shapesFromJSON(shapesJSON) {
+    let shapes = [];
+    for (let i = 0; i < shapesJSON.length; i++) {
+        let shape = shapesJSON[i];
+        if (shape.shape) {
+            shapes.push(new Shape(shape.startX, shape.startY, shape.endX, shape.endY, shape.color, shape.lineWidth, shape.fill, shape.shape, shape.drawMode));
+        }
+        else {
+            let brush = new Brush(shape.color, shape.lineWidth, shape.drawMode);
+            for (let j = 0; j < shape.lines.length; j++) {
+                let line = shape.lines[j];
+                brush.lines.push(new Shape(line.startX, line.startY, line.endX, line.endY, line.color, line.lineWidth, line.fill, line.shape, line.drawMode));
+            }
+            shapes.push(brush);
         }
     }
+    return shapes;
 }
 function setMode(mode) {
     currentMode = mode;
@@ -309,4 +327,9 @@ slider.addEventListener("input", (e) => {
     sliderValue.innerText = slider.value;
     currentlineW = parseInt(slider.value);
 });
+if (localStorage.getItem(keyLokalStorage)) {
+    let shapesJSON = JSON.parse(localStorage.getItem(keyLokalStorage));
+    shapes = shapesFromJSON(shapesJSON);
+    drawShapes();
+}
 //# sourceMappingURL=index.js.map
