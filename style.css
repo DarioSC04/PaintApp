@@ -7,12 +7,11 @@ section {
 body {
   padding: 0;
   margin: 0;
-  display: flex;
-  flex-direction: column;
+  
   height: 100vh;
 }
 
-nav {
+nav{
   height: 4rem;
   width: 100%;
   background: #4c4c4a;
@@ -27,11 +26,6 @@ nav:hover{
   cursor: pointer;
 }
 
-section {
-  flex: 1 1 0%;
-  display: flex;
-}
-
 aside {
   width: 4rem;
   background: #535353;
@@ -43,23 +37,27 @@ aside {
 
   border: 3px solid #4c4c4a;
   position: fixed;
-
 }
 
 aside:hover{
   cursor: pointer;
 }
 
-main {
-  background: #ffffff;
-  flex: 1 1 0%;
-  overflow: auto;
-  padding: 1rem;
-}
-
-.main {
-  border: 1px black dashed;
-  height: 100%;
+.sidebar {
+padding-left: 20px;
+padding-top: 20px; 
+position: fixed; 
+top: 0; 
+right: 0; 
+height: 100vh; 
+width: 230px; 
+z-index: 999; 
+background-color: #535353d6;
+backdrop-filter: blur(10px);
+display: none; 
+flex-direction: column; 
+align-items: flex-start; 
+justify-content: flex-start; 
 }
 
 .tools {
@@ -77,21 +75,29 @@ margin-top: -10px;
   margin-top: -10px; 
 }
 
+.Redo {
+  margin-bottom: 25px;
+  margin-top: -10px; 
+}
 
 #savebutton {
-  background-color: #316bb3;  /* Hintergrundfarbe des Buttons */
-  color: white;             /* Textfarbe */
-  padding: 7px 14px;       /* Innenabstand (oben/unten: 10px, rechts/links: 20px) */
-  border: none;             /* Keine Rahmenlinie */
-  border-radius: 25px;       /* Abgerundete Ecken */
-  font-size: 16px;          /* Schriftgröße */
+  background-color: #316bb3; 
+  color: white;          
+  padding: 7px 14px;     
+  border: none;          
+  border-radius: 25px;      
+  font-size: 16px;        
   font-family: adobe-clean;
-  cursor: pointer;          /* Mauszeiger wird zum Zeiger (wie bei Links) */
+  cursor: pointer;        
   margin-right: 20px;
 }
 
 #savebutton:hover {
-  background-color: #2b64ad;  /* Farbe, wenn die Maus über den Button fährt */
+  background-color: #2b64ad;  
+}
+
+.menü {
+margin-right: 20px; 
 }
 
 h1 {
@@ -124,10 +130,35 @@ font-weight: 300;
 font-style: normal;
 color: white
 }
-#pinkButton, #yellowButton, #redButton, #blueButton, #greenButton, #circleButton, #lineButton, #brushButton, #rubberButton, #recktanglebutton, #undoButton, #redoButton {
+#pinkButton, #yellowButton, #redButton, #blueButton, #greenButton, #circleButton, #lineButton, #brushButton, #rubberButton, #recktanglebutton, #undoButton, #redoButton, #pointerButton, #fillButton{
 width: 30px;
 }
 
 #slider {
 width: 4rem; 
+}
+
+@media (max-width: 768px) {
+  .hideOnMobile{
+  display: none; 
+  }
+
+  
+  nav {
+    width: 100%;
+    height: 80px;
+    display: flex; 
+  }
+}
+
+@media (min-width: 768px) {
+  .menü{
+  display: none; 
+  }
+}
+
+@media (max-height: 700px) and (min-width: 800px) {
+  aside {
+    width: 8rem;
+  }
 }
