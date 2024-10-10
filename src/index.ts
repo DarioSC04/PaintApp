@@ -482,8 +482,6 @@ function isInsideObjekt(x: number, y:number): drawable | null {
     return null;
 }
 
-
-
 window.addEventListener("resize", (e) => {
     canvas.height = window.innerHeight;
     canvas.width = window.innerWidth;
@@ -588,6 +586,16 @@ const sliderValue = document.getElementById("sliderValue") as HTMLSpanElement;
 slider.addEventListener("input", (e) => {
     sliderValue.innerText = slider.value;
     currentlineW = parseInt(slider.value);
+})
+
+const fillButton = document.getElementById("fillButton") as HTMLElement;
+fillButton.addEventListener("click", (e) => {
+    currentFill = !currentFill;
+})
+
+const pointButton = document.getElementById("pointerButton") as HTMLElement;
+pointButton.addEventListener("click", (e) => {
+    setMode('poi');
 })
 
 if (localStorage.getItem(keyLokalStorage)) {

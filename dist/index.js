@@ -470,6 +470,14 @@ slider.addEventListener("input", (e) => {
     sliderValue.innerText = slider.value;
     currentlineW = parseInt(slider.value);
 });
+const fillButton = document.getElementById("fillButton");
+fillButton.addEventListener("click", (e) => {
+    currentFill = !currentFill;
+});
+const pointButton = document.getElementById("pointerButton");
+pointButton.addEventListener("click", (e) => {
+    setMode('poi');
+});
 if (localStorage.getItem(keyLokalStorage)) {
     let shapesJSON = JSON.parse(localStorage.getItem(keyLokalStorage));
     shapes = shapesFromJSON(shapesJSON);
