@@ -1,6 +1,5 @@
 //deklaration
 const canvas = document.getElementById("canvas") as HTMLCanvasElement;
-const board = document.querySelector('main') as HTMLBodyElement;
 
 const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
 canvas.height = window.innerHeight;
@@ -18,16 +17,15 @@ let Mousedown: boolean = false;
 const keyLokalStorage = 'drawShapes';
 
 let shapes: drawable[] = [];
-
-
-
 let undoStack: drawable[] = [];
+
 abstract class drawable {
 
     public color: string;
     protected lineWidth: number;
     protected lastEdited: number;
     public drawMode: boolean;
+    public seeOutline: boolean = false;
 
     constructor(color: string, lineWidth: number, drawMode: boolean) {
         this.color = color;
@@ -46,6 +44,8 @@ abstract class drawable {
 
     abstract draw(ctx: CanvasRenderingContext2D): void;
     abstract isInside(x: number, y: number): boolean;
+    abstract drawoutline(ctx: CanvasRenderingContext2D): void;
+    abstract move(x: number,y: number):void;
 }
 
 class Shape extends drawable {
@@ -75,6 +75,11 @@ class Shape extends drawable {
 
 
     draw(ctx: CanvasRenderingContext2D): void {
+
+        if(this.seeOutline == true){
+            this.drawoutline(ctx);
+        }
+
         ctx.beginPath()
         ctx.lineWidth = this.lineWidth;
         ctx.strokeStyle = this.color;
@@ -118,6 +123,68 @@ class Shape extends drawable {
         return false;
     }
 
+    drawoutline(ctx: CanvasRenderingContext2D): void {
+
+        ctx.beginPath()
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = '#000000';
+        ctx.setLineDash([5, 15]);
+
+        const distance = 20;
+
+        switch (this.shape) {
+            case 'rec':
+            case 'lin':
+                if(this.startX<this.endX && this.startY<this.endY){
+                    ctx.rect(this.startX -distance, this.startY -distance, this.endX - this.startX + distance* 2, this.endY - this.startY + distance*2)
+                }else if (this.startX<this.endX && this.startY>this.endY){
+                    ctx.rect(this.endX -distance, this.startY -distance, this.startX - this.endX + distance* 2, this.endY - this.startY + distance*2)
+                }else if (this.startX>this.endX && this.startY<this.endY){
+                    ctx.rect(this.startX -distance, this.endY -distance, this.endX - this.startX + distance* 2, this.startY - this.endY + distance*2)
+                }else if (this.startX>this.endX && this.startY>this.endY){
+                    ctx.rect(this.endX -distance, this.endY -distance, this.startX - this.endX + distance* 2, this.startY - this.endY + distance*2)
+                }
+                break;
+            case 'cir':
+                let radius = Math.sqrt((this.endX - this.startX) ** 2 + (this.endY - this.startY) ** 2);
+                ctx.rect(this.startX - radius - distance, this.startY - radius - distance, radius * 2 + distance * 2, radius * 2 + distance * 2)
+                break;
+        }
+        ctx.stroke();
+        ctx.setLineDash([]);
+    }
+    
+    move(x: number, y: number): void {
+        this.startX+=x;
+        this.endX+=x;
+
+        this.startY+=y;
+        this.endY+=y;
+    }
+
+    maxoutPoints(): number[]|null {
+        switch (this.shape) {
+            case 'rec':
+            case 'lin':
+                if(this.startX<this.endX && this.startY<this.endY){
+                    return [this.startX, this.startY, this.endX, this.endY];
+                }else if (this.startX<this.endX && this.startY>this.endY){
+                    return [this.endX, this.startY, this.startX, this.endY];
+                }else if (this.startX>this.endX && this.startY<this.endY){
+                    return [this.startX, this.endY, this.endX, this.startY];
+                }else if (this.startX>this.endX && this.startY>this.endY){
+                    return [this.endX, this.endY, this.startX, this.startY];
+                }
+                break;
+            case 'cir':
+                let radius = Math.sqrt((this.endX - this.startX) ** 2 + (this.endY - this.startY) ** 2);
+                return [this.startX - radius, this.startY - radius, this.startX + radius, this.startY + radius];
+                break;
+        }
+        return null;
+    }
+
+
 }
 
 class Brush extends drawable {
@@ -142,6 +209,9 @@ class Brush extends drawable {
         for (let i = 0; i < this.lines.length; i++) {
             this.lines[i].draw(ctx);
         }
+        if(this.seeOutline == true){
+            this.drawoutline(ctx);
+        }
     }
 
     isInside(x: number, y: number): boolean {
@@ -152,6 +222,43 @@ class Brush extends drawable {
         }
 
         return false;
+    }
+
+    drawoutline(ctx: CanvasRenderingContext2D): void {
+
+        let maxX = 0;
+        let maxY = 0;
+        let minX = window.innerWidth;
+        let minY = window.innerHeight;
+
+        for (let i = 0; i < this.lines.length; i++) {
+            let points = this.lines[i].maxoutPoints();
+
+            if(points == null){
+                continue;
+            }
+
+            maxX = Math.max(maxX, points[2]);
+            maxY = Math.max(maxY, points[3]);
+            minX = Math.min(minX, points[0]);
+            minY = Math.min(minY, points[1]);
+        }
+
+        ctx.beginPath()
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = '#000000';
+        ctx.setLineDash([5, 15]);
+
+        ctx.rect(minX - 20, minY - 20, maxX - minX + 40, maxY - minY + 40)
+
+        ctx.stroke();
+        ctx.setLineDash([]);
+    }
+
+    move(x: number, y: number): void {
+        for (let i = 0; i < this.lines.length; i++) {
+            this.lines[i].move(x, y);
+        }
     }
 }
 
@@ -169,9 +276,14 @@ window.addEventListener("mousedown", (e) =>{
     prevX = e.clientX;
     prevY = e.clientY;
 
+    if(currentMode != 'poi'){
+        canvas.style.cursor = "crosshair";
+    }
 
-if(currentMode == 'bru'){
+    if(currentMode == 'bru'){
         shapes.push(new Brush(currentColor, currentlineW, true));
+    }else if(currentMode == 'poi'){
+        select(prevX,prevY);
     }else if(currentMode == 'lin' || currentMode == 'rec' || currentMode == 'cir'){
         shapes.push(new Shape(prevX, prevY, prevX, prevY, currentColor, currentlineW, currentFill, currentMode , false));
     }
@@ -179,6 +291,7 @@ if(currentMode == 'bru'){
 
 window.addEventListener("mouseup", (e) =>{
     Mousedown = false;
+    canvas.style.cursor = "default";
 
     const shape = shapes[shapes.length - 1];
     if (shape) {
@@ -207,7 +320,6 @@ window.addEventListener("mousemove", (e) => {
 
         }else if(currentMode == 'era') {
 
-                console.log("erase");
                 for (let i = 0; i < shapes.length; i++) {
                     if (shapes[i].isInside(e.clientX, e.clientY)) {
                         shapes[i].setLastEditedNow();
@@ -219,7 +331,17 @@ window.addEventListener("mousemove", (e) => {
                 prevX = e.clientX;
                 prevY = e.clientY;
 
-        } else if ((currentMode == 'lin' || currentMode == 'rec' || currentMode == 'cir') && shapes[shapes.length - 1] instanceof Shape) {
+        } else if(currentMode == 'poi'){
+            for (let i = 0; i < shapes.length; i++) {
+                if (shapes[i].seeOutline) {
+                    shapes[i].move(e.clientX - prevX, e.clientY - prevY);
+                }
+            }
+
+            prevX = e.clientX;
+            prevY = e.clientY;
+
+        }else if ((currentMode == 'lin' || currentMode == 'rec' || currentMode == 'cir') && shapes[shapes.length - 1] instanceof Shape) {
             const shape: Shape = shapes.pop() as Shape;
 
             if (shape?.drawMode == true) {
@@ -247,7 +369,9 @@ window.addEventListener("keydown", (e) => {
         setMode('cir');
     } else if (e.key == 'f') {
         currentFill = !currentFill;
-    } else if (e.key == 'ArrowUp') {
+    } else if (e.key == 'p') {
+        setMode('poi');
+    }else if (e.key == 'ArrowUp') {
         currentlineW += 1;
     } else if (e.key == 'ArrowDown') {
         currentlineW -= 1;
@@ -295,7 +419,11 @@ function shapesFromJSON(shapesJSON: any[]): drawable[] {
 
 function setMode(mode: string) {
     currentMode = mode;
-    //buttons hervorheben
+    
+    for (let i = 0; i < shapes.length; i++) {
+        shapes[i].seeOutline = false;
+    }
+
 }
 
 function setColorCustom(color: string) {
@@ -303,7 +431,6 @@ function setColorCustom(color: string) {
     colorPicker.value = color;
     colorValue.innerText = color;
 }
-
 
 function undo() {
     if (shapes.length > 0) {
@@ -322,6 +449,35 @@ function redo() {
         drawShapes();
     }
 }
+
+function select(x: number, y:number){
+    let shape = isInsideObjekt(x,y);
+
+    if(shape != null ){
+        let before: boolean = shape.seeOutline;
+        canvas.style.cursor = "grab";
+        for (let i = 0; i < shapes.length; i++) {
+            shapes[i].seeOutline = false;
+        }
+        shape.seeOutline = !before;
+        shape.drawoutline(ctx);
+    }else{
+        for (let i = 0; i < shapes.length; i++) {
+            shapes[i].seeOutline = false;
+        }
+    }
+}
+
+function isInsideObjekt(x: number, y:number): drawable | null {
+    for (let i = 0; i < shapes.length; i++) {
+        if (shapes[i].isInside(x, y)) {
+            return shapes[i];
+        }
+    }
+    return null;
+}
+
+
 
 window.addEventListener("resize", (e) => {
     canvas.height = window.innerHeight;
