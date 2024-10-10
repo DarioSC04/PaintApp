@@ -320,7 +320,7 @@ window.addEventListener("mousemove", (e) => {
 
         }else if(currentMode == 'era') {
 
-                for (let i = 0; i < shapes.length; i++) {
+                for (let i = shapes.length; i >= 0; i--) {
                     if (shapes[i].isInside(e.clientX, e.clientY)) {
                         shapes[i].setLastEditedNow();
                         undoStack.push(shapes[i]);
@@ -469,7 +469,7 @@ function select(x: number, y:number){
 }
 
 function isInsideObjekt(x: number, y:number): drawable | null {
-    for (let i = 0; i < shapes.length; i++) {
+    for (let i = shapes.length; i >= 0; i--) {
         if (shapes[i].isInside(x, y)) {
             return shapes[i];
         }
