@@ -205,10 +205,12 @@ class Brush extends drawable {
 const nav = document.querySelector('nav');
 const aside = document.querySelector('aside');
 const mobileNavigation = document.querySelector('mobileNavigation');
+const sidebar = document.querySelector('.sidebar');
 window.addEventListener("mousedown", (e) => {
-    if (e.clientX < aside.clientWidth || e.clientY < nav.clientHeight || e.clientX > window.innerWidth - mobileNavigation.clientWidth) {
+    if (e.clientX < aside.clientWidth || e.clientY < nav.clientHeight) {
         return;
     }
+    console.log(nav.clientWidth);
     Mousedown = true;
     prevX = e.clientX;
     prevY = e.clientY;
@@ -509,6 +511,7 @@ undoButton.addEventListener("click", (e) => {
 });
 const undoButtonMobile = document.getElementById("undoButtonMobile");
 undoButtonMobile.addEventListener("click", (e) => {
+    undo();
     undo();
 });
 const redoButton = document.getElementById("redoButton");
