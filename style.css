@@ -80,7 +80,7 @@ margin-top: -10px;
   margin-top: -10px; 
 }
 
-#savebutton {
+#saveButton, #saveButtonMobile {
   background-color: #316bb3; 
   color: white;          
   padding: 7px 14px;     
@@ -92,7 +92,7 @@ margin-top: -10px;
   margin-right: 20px;
 }
 
-#savebutton:hover {
+#saveButton:hover, #saveButtonMobile:hover {
   background-color: #2b64ad;  
 }
 
@@ -130,11 +130,11 @@ font-weight: 300;
 font-style: normal;
 color: white
 }
-#pinkButton, #yellowButton, #redButton, #blueButton, #greenButton, #circleButton, #lineButton, #brushButton, #rubberButton, #recktanglebutton, #undoButton, #redoButton, #pointerButton, #fillButton{
+#pinkButton, #yellowButton, #redButton, #blueButton, #greenButton, #circleButton, #lineButton, #brushButton, #rubberButton, #recktanglebutton, #undoButton, #redoButton, #pointerButton, #fillButton, #pinkButtonMobile, #yellowButtonMobile, #redButtonMobile, #blueButtonMobile, #greenButtonMobile, #circleButtonMobile, #lineButtonMobile, #brushButtonMobile, #rubberButtonMobile, #recktanglebuttonMobile, #undoButtonMobile, #redoButtonMobile, #pointerButtonMobile, #fillButtonMobile {
 width: 30px;
 }
 
-#slider {
+#slider, #sliderMobile {
 width: 4rem; 
 }
 
