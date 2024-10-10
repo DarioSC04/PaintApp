@@ -267,10 +267,11 @@ class Brush extends drawable {
 
 const nav = document.querySelector('nav') as HTMLElement;
 const aside = document.querySelector('aside') as HTMLElement;
+const mobileNavigation = document.querySelector('mobileNavigation') as HTMLElement;
 
 window.addEventListener("mousedown", (e) =>{
 
-    if(e.clientX < aside.clientWidth || e.clientY < nav.clientHeight){
+    if(e.clientX < aside.clientWidth || e.clientY < nav.clientHeight||e.clientX > window.innerWidth-mobileNavigation.clientWidth){
         return;
     }
 
@@ -435,10 +436,14 @@ function setColorCustom(color: string) {
     currentColor = color;
     colorPicker.value = color;
     colorValue.innerText = color;
+
+    colorPickerMobile.value = color;
+    colorValueMobile.innerText = color;
 }
 
 function undo() {
     if (shapes.length > 0) {
+        console.log("undo");
         let shape = shapes.pop() as drawable
         shape.setLastEditedNow();
         undoStack.push(shape);
@@ -617,6 +622,7 @@ const undoButton = document.getElementById("undoButton") as HTMLElement;
 undoButton.addEventListener("click", (e) => {
     undo();
 });
+
 const undoButtonMobile = document.getElementById("undoButtonMobile") as HTMLElement;
 undoButtonMobile.addEventListener("click", (e) => {
     undo();

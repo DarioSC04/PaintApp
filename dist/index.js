@@ -204,8 +204,9 @@ class Brush extends drawable {
 }
 const nav = document.querySelector('nav');
 const aside = document.querySelector('aside');
+const mobileNavigation = document.querySelector('mobileNavigation');
 window.addEventListener("mousedown", (e) => {
-    if (e.clientX < aside.clientWidth || e.clientY < nav.clientHeight) {
+    if (e.clientX < aside.clientWidth || e.clientY < nav.clientHeight || e.clientX > window.innerWidth - mobileNavigation.clientWidth) {
         return;
     }
     Mousedown = true;
@@ -356,9 +357,12 @@ function setColorCustom(color) {
     currentColor = color;
     colorPicker.value = color;
     colorValue.innerText = color;
+    colorPickerMobile.value = color;
+    colorValueMobile.innerText = color;
 }
 function undo() {
     if (shapes.length > 0) {
+        console.log("undo");
         let shape = shapes.pop();
         shape.setLastEditedNow();
         undoStack.push(shape);
