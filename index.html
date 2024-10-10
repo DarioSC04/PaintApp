@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="https://use.typekit.net/pwx1zcb.css">
   <script defer src="dist/index.js" ></script>
 </head>
+
 <body>
   <nav id="nav">
     <div2 class= align-center> <h1> Photoshop </h1> </div2>
@@ -17,47 +18,47 @@
     <section class="sidebar">
       <div2 onclick=hideSidebar()><svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#FFFFFF"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg></div2>
       <h2 id="funktionWählenMobile">Funktion wahlen:</h2>  
-      <section>
-        <p>Brush:</p>
-        <div class= "tools">
-          <input type="image" src="Tools/pointer.png" name="pointerButton" id="pointerButtonMobile"/>
-          <input type="image" src="Tools/paint-brush.png" name="brushbutton" id="brushButtonMobile"/>
-          <input type="image" src="Tools/rubber.png" name="rubberbutton" id="rubberButtonMobile"/>
-          <h3>Dicke einstellen: <input type="range" id="sliderMobile" name="slider" min="1" max="15" value="5"> <span id="sliderValueMobile">5</span  >
-          </section>
-          
-        </div>
         <section>
-        <p>Un/Redo:</p>
-        <div class="Redo">
-          <input type="image" src="Tools/UndoButton.png" name="undoButton" id="undoButtonMobile"/>
-          <input type="image" src="Tools/RedoButton.png" name="redoButton" id="redoButtonMobile"/>
-        </div>
-      </section>
-
-        <section>
-        <p>Shape's:</p>
-        <div class= "forms"> 
-          <input type="image" src="Shape/circle.png" name="circlebutton" id="circleButtonMobile"/>
-          <input type="image" src="Shape/line.png" name="linebutton" id="lineButtonMobile"/>
-          <input type="image" src="Shape/recktangle.png" name="recktanglebutton" id="recktangleButtonMobile" />
-        </div>
-      </section>
-      
-      <section>
-        <p>Farbe wahlen:</p> 
-        <div class="color"> 
-          <h3><input type="color" id="colorPickerMobile" name="colorPicker" value="#000000">
-            <span id="colorValueMobile">#000000</span></h3>
-          <input type="image" src="Color Images/fill.png" name="fillButton" id="fillButton"/>
-          <input type="image" src="Color Images/blue-button-0000ff.png" name="blueButton" id="blueButtonMobile"/>
-          <input type="image" src="Color Images/green-button-009b00.png" name="greenButton" id="greenButtonMobile"/>
-          <input type="image" src="Color Images/pink-button-f200ff.png" name="pinkButton" id="pinkButtonMobile"/>
-          <input type="image" src="Color Images/red-button-ff0000.png" name="redButton" id="redButtonMobile" />
-          <input type="image" src="Color Images/yellow-button-ffe000.png" name="yellowButton" id="yellowButtonMobile"/>
-        </div>
+          <p>Brush:</p>
+          <div class= "tools">
+            <input type="image" src="Tools/pointer.png" name="pointerButton" id="pointerButtonMobile"/>
+            <input type="image" src="Tools/paint-brush.png" name="brushbutton" id="brushButtonMobile"/>
+            <input type="image" src="Tools/rubber.png" name="rubberbutton" id="rubberButtonMobile"/>
+            <h3>Dicke einstellen: <input type="range" id="sliderMobile" name="slider" min="1" max="15" value="5"> <span id="sliderValueMobile">5</span  >
+            </section>
+            
+          </div>
+          <section>
+          <p>Un/Redo:</p>
+          <div class="Redo">
+            <input type="image" src="Tools/UndoButton.png" name="undoButton" id="undoButtonMobile"/>
+            <input type="image" src="Tools/RedoButton.png" name="redoButton" id="redoButtonMobile"/>
+          </div>
         </section>
-        <div2 class= align-right> <button  id="saveButtonMobile" >Speichern</button> </div2>
+
+          <section>
+          <p>Shape's:</p>
+          <div class= "forms"> 
+            <input type="image" src="Shape/circle.png" name="circlebutton" id="circleButtonMobile"/>
+            <input type="image" src="Shape/line.png" name="linebutton" id="lineButtonMobile"/>
+            <input type="image" src="Shape/recktangle.png" name="recktanglebutton" id="recktangleButtonMobile" />
+          </div>
+        </section>
+        
+        <section>
+          <p>Farbe wahlen:</p> 
+          <div class="color"> 
+            <h3><input type="color" id="colorPickerMobile" name="colorPicker" value="#000000">
+              <span id="colorValueMobile">#000000</span></h3>
+            <input type="image" src="Color Images/fill.png" name="fillButton" id="fillButton"/>
+            <input type="image" src="Color Images/blue-button-0000ff.png" name="blueButton" id="blueButtonMobile"/>
+            <input type="image" src="Color Images/green-button-009b00.png" name="greenButton" id="greenButtonMobile"/>
+            <input type="image" src="Color Images/pink-button-f200ff.png" name="pinkButton" id="pinkButtonMobile"/>
+            <input type="image" src="Color Images/red-button-ff0000.png" name="redButton" id="redButtonMobile" />
+            <input type="image" src="Color Images/yellow-button-ffe000.png" name="yellowButton" id="yellowButtonMobile"/>
+          </div>
+        </section>
+        <div2><button  id="saveButtonMobile" >Speichern</button> </div2>
     </section>
     
 
@@ -110,7 +111,8 @@
       </aside>
         <canvas id="canvas"></canvas>
 
-   <script>
+  
+  <script>
     function showSidebar() {
       const sidebar = document.querySelector('.sidebar')
       sidebar.style.display = 'flex' 
