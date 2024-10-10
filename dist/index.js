@@ -1,6 +1,5 @@
 "use strict";
 const canvas = document.getElementById("canvas");
-const board = document.querySelector('main');
 const ctx = canvas.getContext("2d");
 canvas.height = window.innerHeight;
 canvas.width = window.innerWidth;
@@ -11,10 +10,12 @@ let currentMode = 'bru';
 let prevX = -1;
 let prevY = -1;
 let Mousedown = false;
+const keyLokalStorage = 'drawShapes';
 let shapes = [];
 let undoStack = [];
 class drawable {
     constructor(color, lineWidth, drawMode) {
+        this.seeOutline = false;
         this.color = color;
         this.lineWidth = lineWidth;
         this.drawMode = drawMode;
@@ -40,6 +41,9 @@ class Shape extends drawable {
         this.shape = shape;
     }
     draw(ctx) {
+        if (this.seeOutline == true) {
+            this.drawoutline(ctx);
+        }
         ctx.beginPath();
         ctx.lineWidth = this.lineWidth;
         ctx.strokeStyle = this.color;
@@ -78,6 +82,67 @@ class Shape extends drawable {
         }
         return false;
     }
+    drawoutline(ctx) {
+        ctx.beginPath();
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = '#000000';
+        ctx.setLineDash([5, 15]);
+        const distance = 20;
+        switch (this.shape) {
+            case 'rec':
+            case 'lin':
+                if (this.startX < this.endX && this.startY < this.endY) {
+                    ctx.rect(this.startX - distance, this.startY - distance, this.endX - this.startX + distance * 2, this.endY - this.startY + distance * 2);
+                }
+                else if (this.startX < this.endX && this.startY > this.endY) {
+                    ctx.rect(this.endX - distance, this.startY - distance, this.startX - this.endX + distance * 2, this.endY - this.startY + distance * 2);
+                }
+                else if (this.startX > this.endX && this.startY < this.endY) {
+                    ctx.rect(this.startX - distance, this.endY - distance, this.endX - this.startX + distance * 2, this.startY - this.endY + distance * 2);
+                }
+                else if (this.startX > this.endX && this.startY > this.endY) {
+                    ctx.rect(this.endX - distance, this.endY - distance, this.startX - this.endX + distance * 2, this.startY - this.endY + distance * 2);
+                }
+                break;
+            case 'cir':
+                let radius = Math.sqrt((this.endX - this.startX) ** 2 + (this.endY - this.startY) ** 2);
+                ctx.rect(this.startX - radius - distance, this.startY - radius - distance, radius * 2 + distance * 2, radius * 2 + distance * 2);
+                break;
+        }
+        ctx.stroke();
+        ctx.setLineDash([]);
+    }
+    move(x, y) {
+        this.startX += x;
+        this.endX += x;
+        this.startY += y;
+        this.endY += y;
+        this.setLastEditedNow();
+    }
+    maxoutPoints() {
+        switch (this.shape) {
+            case 'rec':
+            case 'lin':
+                if (this.startX < this.endX && this.startY < this.endY) {
+                    return [this.startX, this.startY, this.endX, this.endY];
+                }
+                else if (this.startX < this.endX && this.startY > this.endY) {
+                    return [this.endX, this.startY, this.startX, this.endY];
+                }
+                else if (this.startX > this.endX && this.startY < this.endY) {
+                    return [this.startX, this.endY, this.endX, this.startY];
+                }
+                else if (this.startX > this.endX && this.startY > this.endY) {
+                    return [this.endX, this.endY, this.startX, this.startY];
+                }
+                break;
+            case 'cir':
+                let radius = Math.sqrt((this.endX - this.startX) ** 2 + (this.endY - this.startY) ** 2);
+                return [this.startX - radius, this.startY - radius, this.startX + radius, this.startY + radius];
+                break;
+        }
+        return null;
+    }
 }
 class Brush extends drawable {
     constructor(color, lineWidth, drawMode) {
@@ -95,6 +160,9 @@ class Brush extends drawable {
         for (let i = 0; i < this.lines.length; i++) {
             this.lines[i].draw(ctx);
         }
+        if (this.seeOutline == true) {
+            this.drawoutline(ctx);
+        }
     }
     isInside(x, y) {
         for (let i = 0; i < this.lines.length; i++) {
@@ -103,6 +171,35 @@ class Brush extends drawable {
             }
         }
         return false;
+    }
+    drawoutline(ctx) {
+        let maxX = 0;
+        let maxY = 0;
+        let minX = window.innerWidth;
+        let minY = window.innerHeight;
+        for (let i = 0; i < this.lines.length; i++) {
+            let points = this.lines[i].maxoutPoints();
+            if (points == null) {
+                continue;
+            }
+            maxX = Math.max(maxX, points[2]);
+            maxY = Math.max(maxY, points[3]);
+            minX = Math.min(minX, points[0]);
+            minY = Math.min(minY, points[1]);
+        }
+        ctx.beginPath();
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = '#000000';
+        ctx.setLineDash([5, 15]);
+        ctx.rect(minX - 20, minY - 20, maxX - minX + 40, maxY - minY + 40);
+        ctx.stroke();
+        ctx.setLineDash([]);
+    }
+    move(x, y) {
+        this.lastEdited = Date.now();
+        for (let i = 0; i < this.lines.length; i++) {
+            this.lines[i].move(x, y);
+        }
     }
 }
 const nav = document.querySelector('nav');
@@ -114,8 +211,14 @@ window.addEventListener("mousedown", (e) => {
     Mousedown = true;
     prevX = e.clientX;
     prevY = e.clientY;
+    if (currentMode != 'poi') {
+        canvas.style.cursor = "crosshair";
+    }
     if (currentMode == 'bru') {
         shapes.push(new Brush(currentColor, currentlineW, true));
+    }
+    else if (currentMode == 'poi') {
+        select(prevX, prevY);
     }
     else if (currentMode == 'lin' || currentMode == 'rec' || currentMode == 'cir') {
         shapes.push(new Shape(prevX, prevY, prevX, prevY, currentColor, currentlineW, currentFill, currentMode, false));
@@ -123,6 +226,7 @@ window.addEventListener("mousedown", (e) => {
 });
 window.addEventListener("mouseup", (e) => {
     Mousedown = false;
+    canvas.style.cursor = "default";
     const shape = shapes[shapes.length - 1];
     if (shape) {
         shape.drawMode = false;
@@ -142,12 +246,20 @@ window.addEventListener("mousemove", (e) => {
             prevY = e.clientY;
         }
         else if (currentMode == 'era') {
-            console.log("erase");
-            for (let i = 0; i < shapes.length; i++) {
+            for (let i = shapes.length - 1; i >= 0; i--) {
                 if (shapes[i].isInside(e.clientX, e.clientY)) {
                     shapes[i].setLastEditedNow();
                     undoStack.push(shapes[i]);
                     shapes.splice(i, 1);
+                }
+            }
+            prevX = e.clientX;
+            prevY = e.clientY;
+        }
+        else if (currentMode == 'poi') {
+            for (let i = 0; i < shapes.length; i++) {
+                if (shapes[i].seeOutline) {
+                    shapes[i].move(e.clientX - prevX, e.clientY - prevY);
                 }
             }
             prevX = e.clientX;
@@ -186,6 +298,9 @@ window.addEventListener("keydown", (e) => {
     else if (e.key == 'f') {
         currentFill = !currentFill;
     }
+    else if (e.key == 'p') {
+        setMode('poi');
+    }
     else if (e.key == 'ArrowUp') {
         currentlineW += 1;
     }
@@ -206,15 +321,36 @@ window.addEventListener("keydown", (e) => {
     }
 });
 function drawShapes() {
-    if (ctx) {
-        ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-        for (let i = 0; i < shapes.length; i++) {
-            shapes[i].draw(ctx);
+    localStorage.setItem(keyLokalStorage, JSON.stringify(shapes));
+    ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+    shapes.sort((a, b) => a.getLastEdited() - b.getLastEdited());
+    for (let i = 0; i < shapes.length; i++) {
+        shapes[i].draw(ctx);
+    }
+}
+function shapesFromJSON(shapesJSON) {
+    let shapes = [];
+    for (let i = 0; i < shapesJSON.length; i++) {
+        let shape = shapesJSON[i];
+        if (shape.shape) {
+            shapes.push(new Shape(shape.startX, shape.startY, shape.endX, shape.endY, shape.color, shape.lineWidth, shape.fill, shape.shape, shape.drawMode));
+        }
+        else {
+            let brush = new Brush(shape.color, shape.lineWidth, shape.drawMode);
+            for (let j = 0; j < shape.lines.length; j++) {
+                let line = shape.lines[j];
+                brush.lines.push(new Shape(line.startX, line.startY, line.endX, line.endY, line.color, line.lineWidth, line.fill, line.shape, line.drawMode));
+            }
+            shapes.push(brush);
         }
     }
+    return shapes;
 }
 function setMode(mode) {
     currentMode = mode;
+    for (let i = 0; i < shapes.length; i++) {
+        shapes[i].seeOutline = false;
+    }
 }
 function setColorCustom(color) {
     currentColor = color;
@@ -236,6 +372,31 @@ function redo() {
         shapes.push(shape);
         drawShapes();
     }
+}
+function select(x, y) {
+    let shape = isInsideObjekt(x, y);
+    if (shape != null) {
+        let before = shape.seeOutline;
+        canvas.style.cursor = "grab";
+        for (let i = 0; i < shapes.length; i++) {
+            shapes[i].seeOutline = false;
+        }
+        shape.seeOutline = !before;
+        shape.drawoutline(ctx);
+    }
+    else {
+        for (let i = 0; i < shapes.length; i++) {
+            shapes[i].seeOutline = false;
+        }
+    }
+}
+function isInsideObjekt(x, y) {
+    for (let i = shapes.length - 1; i >= 0; i--) {
+        if (shapes[i].isInside(x, y)) {
+            return shapes[i];
+        }
+    }
+    return null;
 }
 window.addEventListener("resize", (e) => {
     canvas.height = window.innerHeight;
@@ -309,4 +470,9 @@ slider.addEventListener("input", (e) => {
     sliderValue.innerText = slider.value;
     currentlineW = parseInt(slider.value);
 });
+if (localStorage.getItem(keyLokalStorage)) {
+    let shapesJSON = JSON.parse(localStorage.getItem(keyLokalStorage));
+    shapes = shapesFromJSON(shapesJSON);
+    drawShapes();
+}
 //# sourceMappingURL=index.js.map
