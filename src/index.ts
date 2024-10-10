@@ -160,6 +160,8 @@ class Shape extends drawable {
 
         this.startY+=y;
         this.endY+=y;
+
+        this.setLastEditedNow();
     }
 
     maxoutPoints(): number[]|null {
@@ -256,6 +258,7 @@ class Brush extends drawable {
     }
 
     move(x: number, y: number): void {
+        this.lastEdited = Date.now();
         for (let i = 0; i < this.lines.length; i++) {
             this.lines[i].move(x, y);
         }
@@ -320,7 +323,7 @@ window.addEventListener("mousemove", (e) => {
 
         }else if(currentMode == 'era') {
 
-                for (let i = shapes.length; i >= 0; i--) {
+                for (let i = shapes.length-1; i >= 0; i--) {
                     if (shapes[i].isInside(e.clientX, e.clientY)) {
                         shapes[i].setLastEditedNow();
                         undoStack.push(shapes[i]);
@@ -391,6 +394,8 @@ function drawShapes() {
 
     localStorage.setItem(keyLokalStorage, JSON.stringify(shapes));
     ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+    shapes.sort((a, b) => a.getLastEdited() - b.getLastEdited());
+
     for (let i = 0; i < shapes.length; i++) {
         shapes[i].draw(ctx);
     }
@@ -469,7 +474,7 @@ function select(x: number, y:number){
 }
 
 function isInsideObjekt(x: number, y:number): drawable | null {
-    for (let i = shapes.length; i >= 0; i--) {
+    for (let i = shapes.length-1; i >= 0; i--) {
         if (shapes[i].isInside(x, y)) {
             return shapes[i];
         }
