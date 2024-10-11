@@ -110,7 +110,7 @@ class Shape extends drawable {
     isInside(x: number, y: number): boolean {
         switch (this.shape) {
             case 'rec':
-                return (x > this.startX && x < this.endX && y > this.startY && y < this.endY) || (x < this.startX && x > this.endX && y < this.startY && y > this.endY);
+                return (x > this.startX && x < this.endX && y > this.startY && y < this.endY) || (x < this.startX && x > this.endX && y < this.startY && y > this.endY) || (x < this.startX && x > this.endX && y > this.startY && y < this.endY) || (x > this.startX && x < this.endX && y < this.startY && y > this.endY);
             case 'cir':
                 return Math.sqrt((x - this.startX) ** 2 + (y - this.startY) ** 2) < Math.sqrt((this.endX - this.startX) ** 2 + (this.endY - this.startY) ** 2);
             case 'lin':
@@ -138,9 +138,9 @@ class Shape extends drawable {
                 if(this.startX<this.endX && this.startY<this.endY){
                     ctx.rect(this.startX -distance, this.startY -distance, this.endX - this.startX + distance* 2, this.endY - this.startY + distance*2)
                 }else if (this.startX<this.endX && this.startY>this.endY){
-                    ctx.rect(this.endX -distance, this.startY -distance, this.startX - this.endX + distance* 2, this.endY - this.startY + distance*2)
-                }else if (this.startX>this.endX && this.startY<this.endY){
                     ctx.rect(this.startX -distance, this.endY -distance, this.endX - this.startX + distance* 2, this.startY - this.endY + distance*2)
+                }else if (this.startX>this.endX && this.startY<this.endY){
+                    ctx.rect(this.endX -distance, this.startY -distance, this.startX - this.endX + distance* 2, this.endY - this.startY + distance*2)
                 }else if (this.startX>this.endX && this.startY>this.endY){
                     ctx.rect(this.endX -distance, this.endY -distance, this.startX - this.endX + distance* 2, this.startY - this.endY + distance*2)
                 }
@@ -268,12 +268,15 @@ class Brush extends drawable {
 const nav = document.querySelector('nav') as HTMLElement;
 const aside = document.querySelector('aside') as HTMLElement;
 
-const mobileNavigation = document.querySelector('mobileNavigation') as HTMLElement;
 const sidebar = document.querySelector('.sidebar') as HTMLElement;
 
 window.addEventListener("mousedown", (e) =>{
 
-    if(e.clientX < aside.clientWidth || e.clientY < nav.clientHeight){
+    if(e.clientX < aside.clientWidth ||e.clientY < nav.clientHeight){
+        return;
+    }
+
+    if(sidebar.style.display == "flex" && e.clientX > window.innerWidth - sidebar.clientWidth){
         return;
     }
 
@@ -314,7 +317,11 @@ window.addEventListener("mouseup", (e) =>{
 
 window.addEventListener("mousemove", (e) => {
 
-    if(e.clientX < aside.clientWidth || e.clientY < nav.clientHeight){
+    if(e.clientX < aside.clientWidth ||e.clientY < nav.clientHeight){
+        return;
+    }
+
+    if(sidebar.style.display == "flex" && e.clientX > window.innerWidth - sidebar.clientWidth){
         return;
     }
 
@@ -495,6 +502,7 @@ window.addEventListener("resize", (e) => {
     canvas.height = window.innerHeight;
     canvas.width = window.innerWidth;
     drawShapes();
+
 });
 
 const saveButton = document.getElementById("saveButton") as HTMLElement;
@@ -629,7 +637,6 @@ undoButton.addEventListener("click", (e) => {
 
 const undoButtonMobile = document.getElementById("undoButtonMobile") as HTMLElement;
 undoButtonMobile.addEventListener("click", (e) => {
-    undo();
     undo();
 });
 
