@@ -373,19 +373,19 @@ window.addEventListener("mousemove", (e) => {
 
 window.addEventListener("keydown", (e) => {
     if (e.key == 'b') {
-        setMode('bru');
+        setMode('bru',null);
     } else if (e.key == 'l') {
-        setMode('lin');
+        setMode('lin',null);
     }  else if (e.key == 'e') {
-        setMode('era');
+        setMode('era',null);
     }else if (e.key == 'r') {
-        setMode('rec');
+        setMode('rec',null);
     } else if (e.key == 'c') {
-        setMode('cir');
+        setMode('cir',null);
     } else if (e.key == 'f') {
         currentFill = !currentFill;
     } else if (e.key == 'p') {
-        setMode('poi');
+        setMode('poi',null);
     }else if (e.key == 'ArrowUp') {
         currentlineW += 1;
     } else if (e.key == 'ArrowDown') {
@@ -434,13 +434,34 @@ function shapesFromJSON(shapesJSON: any[]): drawable[] {
     return shapes;
 }
 
-function setMode(mode: string) {
+function setMode(mode: string, source:HTMLElement | null) {
     currentMode = mode;
+
+    unfokusButtons();
+    if(source != null){
+        console.log(source);
+        source.setAttribute("style","background: #686868;");
+    }
     
     for (let i = 0; i < shapes.length; i++) {
         shapes[i].seeOutline = false;
     }
 
+}
+
+function unfokusButtons(){
+    brushButton.setAttribute("style","background: #535353;");
+    lineButton.setAttribute("style","background: #535353;");
+    circleButton.setAttribute("style","background: #535353;");
+    rectangleButton.setAttribute("style","background: #535353;");
+    eraserButton.setAttribute("style","background: #535353;");
+    pointButton.setAttribute("style","background: #535353;");
+    brushButtonMobile.setAttribute("style","background: #535353;");
+    lineButtonMobile.setAttribute("style","background: #535353;");
+    circleButtonMobile.setAttribute("style","background: #535353;");
+    rectangleButtonMobile.setAttribute("style","background: #535353;");
+    eraserButtonMobile.setAttribute("style","background: #535353;");
+    pointButtonMobile.setAttribute("style","background: #535353;");
 }
 
 function setColorCustom(color: string) {
@@ -524,65 +545,49 @@ saveButtonMobile.addEventListener("click", (e) => {
 
 const brushButton = document.getElementById("brushButton") as HTMLElement;
 brushButton.addEventListener("click", (e) => {
-    setMode('bru');
+    setMode('bru',e.target as HTMLElement);
 })
 const brushButtonMobile = document.getElementById("brushButtonMobile") as HTMLElement;
 brushButtonMobile.addEventListener("click", (e) => {
-    setMode('bru');
+    setMode('bru',e.target as HTMLElement);
 })
 
 const lineButton = document.getElementById("lineButton") as HTMLElement;
 lineButton.addEventListener("click", (e) => {
-    setMode('lin');
+    setMode('lin',e.target as HTMLElement);
 })
 const lineButtonMobile = document.getElementById("lineButtonMobile") as HTMLElement;
 lineButtonMobile.addEventListener("click", (e) => {
-    setMode('lin');
+    setMode('lin',e.target as HTMLElement);
 })
 
 
 const circleButton = document.getElementById("circleButton") as HTMLElement;
 circleButton.addEventListener("click", (e) => {
-    setMode('cir');
+    setMode('cir',e.target as HTMLElement);
 })
 const circleButtonMobile = document.getElementById("circleButtonMobile") as HTMLElement;
 circleButtonMobile.addEventListener("click", (e) => {
-    setMode('cir');
+    setMode('cir',e.target as HTMLElement);
 })
 
 const rectangleButton = document.getElementById("recktangleButton") as HTMLElement;
 rectangleButton.addEventListener("click", (e) => {
-    setMode('rec');
+    setMode('rec',e.target as HTMLElement);
 })
 const rectangleButtonMobile = document.getElementById("recktangleButtonMobile") as HTMLElement;
 rectangleButtonMobile.addEventListener("click", (e) => {
-    setMode('rec');
+    setMode('rec',e.target as HTMLElement);
 })
 
 const eraserButton = document.getElementById("rubberButton") as HTMLElement;
 eraserButton.addEventListener("click", (e) => {
-   setMode('era');
-
-    //    //test
-    //     currentColor = '#FF0000';
-    //    for (let x = 0; x < window.innerWidth; x=x+4) {
-    //     for (let y = 0; y < window.innerHeight; y=y+4) {
-    //         for (let i = 0; i < shapes.length; i++) {
-    //             if (shapes[i].isInside(x, y)) {
-    //                 console.log("isInside " + x + " " + y);
-    //                 ctx.beginPath();
-    //                 ctx.arc(x, y, 2, 0, Math.PI * 2);
-    //                 ctx.fillStyle = '#FF0000';
-    //                 ctx.fill();
-    //             }
-    //         }
-    //     }
-    // }
+   setMode('era',e.target as HTMLElement);
 
 })
 const eraserButtonMobile = document.getElementById("rubberButtonMobile") as HTMLElement;
 eraserButtonMobile.addEventListener("click", (e) => {
-    setMode('era');
+    setMode('era',e.target as HTMLElement);
 })
 
 const blueButton = document.getElementById("blueButton") as HTMLElement;
@@ -686,11 +691,11 @@ fillButtonMobile.addEventListener("click", (e) => {
 
 const pointButton = document.getElementById("pointerButton") as HTMLElement;
 pointButton.addEventListener("click", (e) => {
-    setMode('poi');
+    setMode('poi',e.target as HTMLElement);
 })
 const pointButtonMobile = document.getElementById("pointerButtonMobile") as HTMLElement;
 pointButtonMobile.addEventListener("click", (e) => {
-    setMode('poi');
+    setMode('poi',e.target as HTMLElement);
 })
 
 if (localStorage.getItem(keyLokalStorage)) {

@@ -289,25 +289,25 @@ window.addEventListener("mousemove", (e) => {
 });
 window.addEventListener("keydown", (e) => {
     if (e.key == 'b') {
-        setMode('bru');
+        setMode('bru', null);
     }
     else if (e.key == 'l') {
-        setMode('lin');
+        setMode('lin', null);
     }
     else if (e.key == 'e') {
-        setMode('era');
+        setMode('era', null);
     }
     else if (e.key == 'r') {
-        setMode('rec');
+        setMode('rec', null);
     }
     else if (e.key == 'c') {
-        setMode('cir');
+        setMode('cir', null);
     }
     else if (e.key == 'f') {
         currentFill = !currentFill;
     }
     else if (e.key == 'p') {
-        setMode('poi');
+        setMode('poi', null);
     }
     else if (e.key == 'ArrowUp') {
         currentlineW += 1;
@@ -354,11 +354,30 @@ function shapesFromJSON(shapesJSON) {
     }
     return shapes;
 }
-function setMode(mode) {
+function setMode(mode, source) {
     currentMode = mode;
+    unfokusButtons();
+    if (source != null) {
+        console.log(source);
+        source.setAttribute("style", "background: #686868;");
+    }
     for (let i = 0; i < shapes.length; i++) {
         shapes[i].seeOutline = false;
     }
+}
+function unfokusButtons() {
+    brushButton.setAttribute("style", "background: #535353;");
+    lineButton.setAttribute("style", "background: #535353;");
+    circleButton.setAttribute("style", "background: #535353;");
+    rectangleButton.setAttribute("style", "background: #535353;");
+    eraserButton.setAttribute("style", "background: #535353;");
+    pointButton.setAttribute("style", "background: #535353;");
+    brushButtonMobile.setAttribute("style", "background: #535353;");
+    lineButtonMobile.setAttribute("style", "background: #535353;");
+    circleButtonMobile.setAttribute("style", "background: #535353;");
+    rectangleButtonMobile.setAttribute("style", "background: #535353;");
+    eraserButtonMobile.setAttribute("style", "background: #535353;");
+    pointButtonMobile.setAttribute("style", "background: #535353;");
 }
 function setColorCustom(color) {
     currentColor = color;
@@ -432,43 +451,43 @@ saveButtonMobile.addEventListener("click", (e) => {
 });
 const brushButton = document.getElementById("brushButton");
 brushButton.addEventListener("click", (e) => {
-    setMode('bru');
+    setMode('bru', e.target);
 });
 const brushButtonMobile = document.getElementById("brushButtonMobile");
 brushButtonMobile.addEventListener("click", (e) => {
-    setMode('bru');
+    setMode('bru', e.target);
 });
 const lineButton = document.getElementById("lineButton");
 lineButton.addEventListener("click", (e) => {
-    setMode('lin');
+    setMode('lin', e.target);
 });
 const lineButtonMobile = document.getElementById("lineButtonMobile");
 lineButtonMobile.addEventListener("click", (e) => {
-    setMode('lin');
+    setMode('lin', e.target);
 });
 const circleButton = document.getElementById("circleButton");
 circleButton.addEventListener("click", (e) => {
-    setMode('cir');
+    setMode('cir', e.target);
 });
 const circleButtonMobile = document.getElementById("circleButtonMobile");
 circleButtonMobile.addEventListener("click", (e) => {
-    setMode('cir');
+    setMode('cir', e.target);
 });
 const rectangleButton = document.getElementById("recktangleButton");
 rectangleButton.addEventListener("click", (e) => {
-    setMode('rec');
+    setMode('rec', e.target);
 });
 const rectangleButtonMobile = document.getElementById("recktangleButtonMobile");
 rectangleButtonMobile.addEventListener("click", (e) => {
-    setMode('rec');
+    setMode('rec', e.target);
 });
 const eraserButton = document.getElementById("rubberButton");
 eraserButton.addEventListener("click", (e) => {
-    setMode('era');
+    setMode('era', e.target);
 });
 const eraserButtonMobile = document.getElementById("rubberButtonMobile");
 eraserButtonMobile.addEventListener("click", (e) => {
-    setMode('era');
+    setMode('era', e.target);
 });
 const blueButton = document.getElementById("blueButton");
 blueButton.addEventListener("click", (e) => {
@@ -558,11 +577,11 @@ fillButtonMobile.addEventListener("click", (e) => {
 });
 const pointButton = document.getElementById("pointerButton");
 pointButton.addEventListener("click", (e) => {
-    setMode('poi');
+    setMode('poi', e.target);
 });
 const pointButtonMobile = document.getElementById("pointerButtonMobile");
 pointButtonMobile.addEventListener("click", (e) => {
-    setMode('poi');
+    setMode('poi', e.target);
 });
 if (localStorage.getItem(keyLokalStorage)) {
     let shapesJSON = JSON.parse(localStorage.getItem(keyLokalStorage));
