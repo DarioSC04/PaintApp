@@ -1,10 +1,10 @@
 import { Shape } from './classes/Shape.js';
 import { Brush } from './classes/Brush.js';
-import { unfokusButtons, setColorPicker } from './buttonEvents.js';
+import { unfokusButtons, setColorPicker, setSliderValue } from './buttonEvents.js';
 const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
 canvas.height = window.innerHeight;
 canvas.width = window.innerWidth;
+const ctx = canvas.getContext("2d");
 export var currentColor = '#000000';
 export var currentlineW = 5;
 export let currentFill = false;
@@ -33,7 +33,6 @@ function mousedown(x, y) {
     if (sidebar.style.display == "flex" && x > window.innerWidth - sidebar.clientWidth) {
         return;
     }
-    console.log(nav.clientWidth);
     Mousedown = true;
     prevX = x;
     prevY = y;
@@ -91,6 +90,7 @@ function mousemove(x, y) {
     if (Mousedown) {
         if (currentMode == 'bru' && shapes[shapes.length - 1] instanceof Brush) {
             shapes[shapes.length - 1].addLine(prevX, prevY, x, y, ctx);
+            localStorage.setItem(keyLokalStorage, JSON.stringify(shapes));
             prevX = x;
             prevY = y;
         }
@@ -174,6 +174,11 @@ window.addEventListener("keydown", (e) => {
         redo();
     }
 });
+window.addEventListener("resize", (e) => {
+    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth;
+    drawShapes();
+});
 function drawShapes() {
     localStorage.setItem(keyLokalStorage, JSON.stringify(shapes));
     ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
@@ -182,29 +187,10 @@ function drawShapes() {
         shapes[i].draw(ctx);
     }
 }
-function shapesFromJSON(shapesJSON) {
-    let shapes = [];
-    for (let i = 0; i < shapesJSON.length; i++) {
-        let shape = shapesJSON[i];
-        if (shape.shape) {
-            shapes.push(new Shape(shape.startX, shape.startY, shape.endX, shape.endY, shape.color, shape.lineWidth, shape.fill, shape.shape, shape.drawMode));
-        }
-        else {
-            let brush = new Brush(shape.color, shape.lineWidth, shape.drawMode);
-            for (let j = 0; j < shape.lines.length; j++) {
-                let line = shape.lines[j];
-                brush.lines.push(new Shape(line.startX, line.startY, line.endX, line.endY, line.color, line.lineWidth, line.fill, line.shape, line.drawMode));
-            }
-            shapes.push(brush);
-        }
-    }
-    return shapes;
-}
 export function setMode(mode, source) {
     currentMode = mode;
     unfokusButtons();
     if (source != null) {
-        console.log(source);
         source.setAttribute("style", "background: #686868;");
     }
     for (let i = 0; i < shapes.length; i++) {
@@ -216,6 +202,7 @@ export function setColorCustom(color) {
     setColorPicker(color);
 }
 export function setCurrentlineW(lineW) {
+    setSliderValue(lineW);
     currentlineW = lineW;
 }
 export function setCurrentFill() {
@@ -223,7 +210,6 @@ export function setCurrentFill() {
 }
 export function undo() {
     if (shapes.length > 0) {
-        console.log("undo");
         let shape = shapes.pop();
         shape.setLastEditedNow();
         undoStack.push(shape);
@@ -263,14 +249,35 @@ function isInsideObjekt(x, y) {
     }
     return null;
 }
-window.addEventListener("resize", (e) => {
-    canvas.height = window.innerHeight;
-    canvas.width = window.innerWidth;
-    drawShapes();
-});
+function shapesFromJSON(shapesJSON) {
+    let shapes = [];
+    for (let i = 0; i < shapesJSON.length; i++) {
+        let shape = shapesJSON[i];
+        if (shape.shape) {
+            shapes.push(new Shape(shape.startX, shape.startY, shape.endX, shape.endY, shape.color, shape.lineWidth, shape.fill, shape.shape, shape.drawMode));
+        }
+        else {
+            let brush = new Brush(shape.color, shape.lineWidth, shape.drawMode);
+            for (let j = 0; j < shape.lines.length; j++) {
+                let line = shape.lines[j];
+                brush.lines.push(new Shape(line.startX, line.startY, line.endX, line.endY, line.color, line.lineWidth, line.fill, line.shape, line.drawMode));
+            }
+            shapes.push(brush);
+        }
+    }
+    return shapes;
+}
 if (localStorage.getItem(keyLokalStorage)) {
     let shapesJSON = JSON.parse(localStorage.getItem(keyLokalStorage));
     shapes = shapesFromJSON(shapesJSON);
     drawShapes();
+}
+function showSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    sidebar.style.display = 'flex';
+}
+function hideSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    sidebar.style.display = 'none';
 }
 //# sourceMappingURL=index.js.map

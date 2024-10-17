@@ -2,7 +2,6 @@ import {setCurrentlineW,setMode,redo,undo,setColorCustom,setCurrentFill } from "
 
 const saveButton = document.getElementById("saveButton") as HTMLElement;
 saveButton.addEventListener("click", (e) => {
-    console.log("saveButton clicked");
     var link = document.createElement('a');
     link.download = 'filename.png';
     link.href = (document.getElementById('canvas') as HTMLCanvasElement).toDataURL()
@@ -10,7 +9,6 @@ saveButton.addEventListener("click", (e) => {
 })
 const saveButtonMobile = document.getElementById("saveButtonMobile") as HTMLElement;
 saveButtonMobile.addEventListener("click", (e) => {
-    console.log("saveButton clicked");
     var link = document.createElement('a');
     link.download = 'filename.png';
     link.href = (document.getElementById('canvas') as HTMLCanvasElement).toDataURL()
@@ -34,7 +32,6 @@ const lineButtonMobile = document.getElementById("lineButtonMobile") as HTMLElem
 lineButtonMobile.addEventListener("click", (e) => {
     setMode('lin',e.target as HTMLElement);
 })
-
 
 const circleButton = document.getElementById("circleButton") as HTMLElement;
 circleButton.addEventListener("click", (e) => {
@@ -123,6 +120,7 @@ const redoButton = document.getElementById("redoButton") as HTMLElement;
 redoButton.addEventListener("click", (e) => {
     redo();
 });
+
 const redoButtonMobile = document.getElementById("redoButtonMobile") as HTMLElement;
 redoButtonMobile.addEventListener("click", (e) => {
     redo();
@@ -143,20 +141,12 @@ colorPickerMobile.addEventListener("input", (e) => {
 const slider = document.getElementById("slider") as HTMLInputElement;
 const sliderValue = document.getElementById("sliderValue") as HTMLSpanElement;
 slider.addEventListener("input", (e) => {
-    sliderValue.innerText = slider.value;
-    sliderValueMobile.innerText = slider.value;
-    sliderMobile.value = slider.value;
-
     setCurrentlineW(parseInt(slider.value));
 })
 
 const sliderMobile = document.getElementById("sliderMobile") as HTMLInputElement;
 const sliderValueMobile = document.getElementById("sliderValueMobile") as HTMLSpanElement;
 sliderMobile.addEventListener("input", (e) => {
-    sliderValueMobile.innerText = sliderMobile.value;
-    sliderValue.innerText = sliderMobile.value;
-    slider.value = sliderMobile.value;
-
     setCurrentlineW(parseInt(sliderMobile.value));
 })
 
@@ -199,4 +189,11 @@ export function setColorPicker(color: string){
 
     colorPickerMobile.value = color;
     colorValueMobile.innerText = color;
+}
+
+export function setSliderValue(value: number){
+    slider.value = value.toString();
+    sliderValue.innerText = value.toString();
+    sliderMobile.value = value.toString();
+    sliderValueMobile.innerText = value.toString();
 }

@@ -1,7 +1,6 @@
 import { setCurrentlineW, setMode, redo, undo, setColorCustom, setCurrentFill } from "./index.js";
 const saveButton = document.getElementById("saveButton");
 saveButton.addEventListener("click", (e) => {
-    console.log("saveButton clicked");
     var link = document.createElement('a');
     link.download = 'filename.png';
     link.href = document.getElementById('canvas').toDataURL();
@@ -9,7 +8,6 @@ saveButton.addEventListener("click", (e) => {
 });
 const saveButtonMobile = document.getElementById("saveButtonMobile");
 saveButtonMobile.addEventListener("click", (e) => {
-    console.log("saveButton clicked");
     var link = document.createElement('a');
     link.download = 'filename.png';
     link.href = document.getElementById('canvas').toDataURL();
@@ -124,17 +122,11 @@ colorPickerMobile.addEventListener("input", (e) => {
 const slider = document.getElementById("slider");
 const sliderValue = document.getElementById("sliderValue");
 slider.addEventListener("input", (e) => {
-    sliderValue.innerText = slider.value;
-    sliderValueMobile.innerText = slider.value;
-    sliderMobile.value = slider.value;
     setCurrentlineW(parseInt(slider.value));
 });
 const sliderMobile = document.getElementById("sliderMobile");
 const sliderValueMobile = document.getElementById("sliderValueMobile");
 sliderMobile.addEventListener("input", (e) => {
-    sliderValueMobile.innerText = sliderMobile.value;
-    sliderValue.innerText = sliderMobile.value;
-    slider.value = sliderMobile.value;
     setCurrentlineW(parseInt(sliderMobile.value));
 });
 const fillButton = document.getElementById("fillButton");
@@ -172,5 +164,11 @@ export function setColorPicker(color) {
     colorValue.innerText = color;
     colorPickerMobile.value = color;
     colorValueMobile.innerText = color;
+}
+export function setSliderValue(value) {
+    slider.value = value.toString();
+    sliderValue.innerText = value.toString();
+    sliderMobile.value = value.toString();
+    sliderValueMobile.innerText = value.toString();
 }
 //# sourceMappingURL=buttonEvents.js.map

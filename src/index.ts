@@ -2,14 +2,15 @@ import { drawable } from './classes/Drawable.js';
 import { Shape } from './classes/Shape.js';
 import { Brush } from './classes/Brush.js';
 
-import { unfokusButtons,setColorPicker } from './buttonEvents.js';
+import { unfokusButtons,setColorPicker,setSliderValue } from './buttonEvents.js';
 
 //deklaration
 const canvas = document.getElementById("canvas") as HTMLCanvasElement;
 
-const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
 canvas.height = window.innerHeight;
 canvas.width = window.innerWidth;
+
+const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
 
 export var currentColor: string = '#000000';
 export var currentlineW: number = 5;
@@ -51,8 +52,6 @@ function mousedown(x:number,y:number){
     if(sidebar.style.display == "flex" && x > window.innerWidth - sidebar.clientWidth){
         return;
     }
-
-    console.log(nav.clientWidth);
 
     Mousedown = true;
 
@@ -124,6 +123,7 @@ function mousemove(x:number,y:number){
         if (currentMode == 'bru' && shapes[shapes.length - 1] instanceof Brush) {
 
                 (shapes[shapes.length-1] as Brush).addLine(prevX, prevY, x, y, ctx);
+                localStorage.setItem(keyLokalStorage, JSON.stringify(shapes));
 
                 prevX = x;
                 prevY = y;
@@ -224,31 +224,11 @@ function drawShapes() {
         
 }
 
-function shapesFromJSON(shapesJSON: any[]): drawable[] {
-    let shapes: drawable[] = [];
-
-    for (let i = 0; i < shapesJSON.length; i++) {
-        let shape = shapesJSON[i];
-        if (shape.shape) {
-            shapes.push(new Shape(shape.startX, shape.startY, shape.endX, shape.endY, shape.color, shape.lineWidth, shape.fill, shape.shape, shape.drawMode));
-        }else{
-             let brush = new Brush(shape.color, shape.lineWidth, shape.drawMode);
-            for (let j = 0; j < shape.lines.length; j++) {
-                let line = shape.lines[j];
-                brush.lines.push(new Shape(line.startX, line.startY, line.endX, line.endY, line.color, line.lineWidth, line.fill, line.shape, line.drawMode));
-            }
-            shapes.push(brush);
-        }
-    }
-    return shapes;
-}
-
 export function setMode(mode: string, source:HTMLElement | null) {
     currentMode = mode;
 
     unfokusButtons();
     if(source != null){
-        console.log(source);
         source.setAttribute("style","background: #686868;");
     }
     
@@ -264,6 +244,7 @@ export function setColorCustom(color: string) {
 }
 
 export function setCurrentlineW(lineW: number) {
+    setSliderValue(lineW);
     currentlineW = lineW;
 }
 
@@ -273,7 +254,6 @@ export function setCurrentFill() {
 
 export function undo() {
     if (shapes.length > 0) {
-        console.log("undo");
         let shape = shapes.pop() as drawable
         shape.setLastEditedNow();
         undoStack.push(shape);
@@ -319,8 +299,39 @@ function isInsideObjekt(x: number, y:number): drawable | null {
 
 //localstorage
 
+function shapesFromJSON(shapesJSON: any[]): drawable[] {
+    let shapes: drawable[] = [];
+
+    for (let i = 0; i < shapesJSON.length; i++) {
+        let shape = shapesJSON[i];
+        if (shape.shape) {
+            shapes.push(new Shape(shape.startX, shape.startY, shape.endX, shape.endY, shape.color, shape.lineWidth, shape.fill, shape.shape, shape.drawMode));
+        }else{
+             let brush = new Brush(shape.color, shape.lineWidth, shape.drawMode);
+            for (let j = 0; j < shape.lines.length; j++) {
+                let line = shape.lines[j];
+                brush.lines.push(new Shape(line.startX, line.startY, line.endX, line.endY, line.color, line.lineWidth, line.fill, line.shape, line.drawMode));
+            }
+            shapes.push(brush);
+        }
+    }
+    return shapes;
+}
+
 if (localStorage.getItem(keyLokalStorage)) {
     let shapesJSON = JSON.parse(localStorage.getItem(keyLokalStorage) as string);
     shapes = shapesFromJSON(shapesJSON);
     drawShapes();
 }
+
+//sidebar
+
+function showSidebar() {
+    const sidebar = document.querySelector('.sidebar') as HTMLElement;
+    sidebar.style.display = 'flex';
+  }
+
+  function hideSidebar() {
+    const sidebar = document.querySelector('.sidebar') as HTMLElement;
+    sidebar.style.display = 'none';
+  }
