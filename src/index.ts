@@ -28,8 +28,9 @@ let undoStack: drawable[] = [];
 
 const nav = document.querySelector('nav') as HTMLElement;
 const aside = document.querySelector('aside') as HTMLElement;
-
 const sidebar = document.querySelector('.sidebar') as HTMLElement;
+
+//windowevents
 
 window.addEventListener("mousedown", (e) =>{
     mousedown(e.clientX,e.clientY);
@@ -208,6 +209,7 @@ window.addEventListener("resize", (e) => {
 
 });
 
+//helperfunctions
 
 function drawShapes() {
 
@@ -314,6 +316,8 @@ function isInsideObjekt(x: number, y:number): drawable | null {
     }
     return null;
 }
+
+//localstorage
 
 if (localStorage.getItem(keyLokalStorage)) {
     let shapesJSON = JSON.parse(localStorage.getItem(keyLokalStorage) as string);
