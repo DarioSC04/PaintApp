@@ -323,15 +323,3 @@ if (localStorage.getItem(keyLokalStorage)) {
     shapes = shapesFromJSON(shapesJSON);
     drawShapes();
 }
-
-//sidebar
-
-function showSidebar() {
-    const sidebar = document.querySelector('.sidebar') as HTMLElement;
-    sidebar.style.display = 'flex';
-  }
-
-  function hideSidebar() {
-    const sidebar = document.querySelector('.sidebar') as HTMLElement;
-    sidebar.style.display = 'none';
-  }
