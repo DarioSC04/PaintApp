@@ -271,12 +271,22 @@ const aside = document.querySelector('aside') as HTMLElement;
 const sidebar = document.querySelector('.sidebar') as HTMLElement;
 
 window.addEventListener("mousedown", (e) =>{
+    mousedown(e.clientX,e.clientY);
+})
 
-    if(e.clientX < aside.clientWidth ||e.clientY < nav.clientHeight){
+window.addEventListener("touchstart", (e) =>{
+    if(e.touches[0] != undefined){
+        mousedown(e.touches[0].clientX,e.touches[0].clientY);
+    }
+})
+
+function mousedown(x:number,y:number){
+
+    if(x < aside.clientWidth ||y < nav.clientHeight){
         return;
     }
 
-    if(sidebar.style.display == "flex" && e.clientX > window.innerWidth - sidebar.clientWidth){
+    if(sidebar.style.display == "flex" && x > window.innerWidth - sidebar.clientWidth){
         return;
     }
 
@@ -284,8 +294,8 @@ window.addEventListener("mousedown", (e) =>{
 
     Mousedown = true;
 
-    prevX = e.clientX;
-    prevY = e.clientY;
+    prevX = x;
+    prevY = y;
 
     if(currentMode != 'poi'){
         canvas.style.cursor = "crosshair";
@@ -298,9 +308,25 @@ window.addEventListener("mousedown", (e) =>{
     }else if(currentMode == 'lin' || currentMode == 'rec' || currentMode == 'cir'){
         shapes.push(new Shape(prevX, prevY, prevX, prevY, currentColor, currentlineW, currentFill, currentMode , false));
     }
-})
+}
 
 window.addEventListener("mouseup", (e) =>{
+    mouseup(e.clientX,e.clientY);
+})
+
+window.addEventListener("touchend", (e) =>{
+    if(e.touches[0] != undefined){
+        mouseup(e.touches[0].clientX,e.touches[0].clientY);
+    }
+})
+
+window.addEventListener("touchcancel", (e) =>{
+    if(e.touches[0] != undefined){
+        mouseup(e.touches[0].clientX,e.touches[0].clientY);
+    }
+})
+
+function mouseup(x:number,y:number){
     Mousedown = false;
     canvas.style.cursor = "default";
 
@@ -313,63 +339,72 @@ window.addEventListener("mouseup", (e) =>{
 
     prevX = -1;
     prevY = -1;
-})
+}
 
 window.addEventListener("mousemove", (e) => {
+    mousemove(e.clientX,e.clientY);
+})
 
-    if(e.clientX < aside.clientWidth ||e.clientY < nav.clientHeight){
+window.addEventListener("touchmove", (e) => {
+    if(e.touches[0] != undefined){
+        mousemove(e.touches[0].clientX,e.touches[0].clientY);
+    }
+})
+
+function mousemove(x:number,y:number){
+    if(x < aside.clientWidth ||y < nav.clientHeight){
         return;
     }
 
-    if(sidebar.style.display == "flex" && e.clientX > window.innerWidth - sidebar.clientWidth){
+    if(sidebar.style.display == "flex" && x > window.innerWidth - sidebar.clientWidth){
         return;
     }
 
     if (Mousedown) {
         if (currentMode == 'bru' && shapes[shapes.length - 1] instanceof Brush) {
 
-                (shapes[shapes.length-1] as Brush).addLine(prevX, prevY, e.clientX, e.clientY);
+                (shapes[shapes.length-1] as Brush).addLine(prevX, prevY, x, y);
 
-                prevX = e.clientX;
-                prevY = e.clientY;
+                prevX = x;
+                prevY = y;
 
         }else if(currentMode == 'era') {
 
                 for (let i = shapes.length-1; i >= 0; i--) {
-                    if (shapes[i].isInside(e.clientX, e.clientY)) {
+                    if (shapes[i].isInside(x, y)) {
                         shapes[i].setLastEditedNow();
                         undoStack.push(shapes[i]);
                         shapes.splice(i, 1);
                     }
                 }
             
-                prevX = e.clientX;
-                prevY = e.clientY;
+                prevX = x;
+                prevY = y;
 
         } else if(currentMode == 'poi'){
             for (let i = 0; i < shapes.length; i++) {
                 if (shapes[i].seeOutline) {
-                    shapes[i].move(e.clientX - prevX, e.clientY - prevY);
+                    shapes[i].move(x - prevX, x - prevY);
                 }
             }
 
-            prevX = e.clientX;
-            prevY = e.clientY;
+            prevX = x;
+            prevY = y;
 
         }else if ((currentMode == 'lin' || currentMode == 'rec' || currentMode == 'cir') && shapes[shapes.length - 1] instanceof Shape) {
             const shape: Shape = shapes.pop() as Shape;
 
             if (shape?.drawMode == true) {
-                shape.endX = e.clientX;
-                shape.endY = e.clientY;
+                shape.endX = x;
+                shape.endY = y;
                 shapes.push(shape);
             }else{
-                shapes.push(new Shape(prevX, prevY, e.clientX, e.clientY, currentColor, currentlineW, currentFill, currentMode, true));
+                shapes.push(new Shape(prevX, prevY, x, y, currentColor, currentlineW, currentFill, currentMode, true));
             }
         }
         drawShapes();
     }
-})
+}
 
 window.addEventListener("keydown", (e) => {
     if (e.key == 'b') {

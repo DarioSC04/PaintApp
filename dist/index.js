@@ -206,16 +206,24 @@ const nav = document.querySelector('nav');
 const aside = document.querySelector('aside');
 const sidebar = document.querySelector('.sidebar');
 window.addEventListener("mousedown", (e) => {
-    if (e.clientX < aside.clientWidth || e.clientY < nav.clientHeight) {
+    mousedown(e.clientX, e.clientY);
+});
+window.addEventListener("touchstart", (e) => {
+    if (e.touches[0] != undefined) {
+        mousedown(e.touches[0].clientX, e.touches[0].clientY);
+    }
+});
+function mousedown(x, y) {
+    if (x < aside.clientWidth || y < nav.clientHeight) {
         return;
     }
-    if (sidebar.style.display == "flex" && e.clientX > window.innerWidth - sidebar.clientWidth) {
+    if (sidebar.style.display == "flex" && x > window.innerWidth - sidebar.clientWidth) {
         return;
     }
     console.log(nav.clientWidth);
     Mousedown = true;
-    prevX = e.clientX;
-    prevY = e.clientY;
+    prevX = x;
+    prevY = y;
     if (currentMode != 'poi') {
         canvas.style.cursor = "crosshair";
     }
@@ -228,8 +236,21 @@ window.addEventListener("mousedown", (e) => {
     else if (currentMode == 'lin' || currentMode == 'rec' || currentMode == 'cir') {
         shapes.push(new Shape(prevX, prevY, prevX, prevY, currentColor, currentlineW, currentFill, currentMode, false));
     }
-});
+}
 window.addEventListener("mouseup", (e) => {
+    mouseup(e.clientX, e.clientY);
+});
+window.addEventListener("touchend", (e) => {
+    if (e.touches[0] != undefined) {
+        mouseup(e.touches[0].clientX, e.touches[0].clientY);
+    }
+});
+window.addEventListener("touchcancel", (e) => {
+    if (e.touches[0] != undefined) {
+        mouseup(e.touches[0].clientX, e.touches[0].clientY);
+    }
+});
+function mouseup(x, y) {
     Mousedown = false;
     canvas.style.cursor = "default";
     const shape = shapes[shapes.length - 1];
@@ -239,54 +260,62 @@ window.addEventListener("mouseup", (e) => {
     drawShapes();
     prevX = -1;
     prevY = -1;
-});
+}
 window.addEventListener("mousemove", (e) => {
-    if (e.clientX < aside.clientWidth || e.clientY < nav.clientHeight) {
+    mousemove(e.clientX, e.clientY);
+});
+window.addEventListener("touchmove", (e) => {
+    if (e.touches[0] != undefined) {
+        mousemove(e.touches[0].clientX, e.touches[0].clientY);
+    }
+});
+function mousemove(x, y) {
+    if (x < aside.clientWidth || y < nav.clientHeight) {
         return;
     }
-    if (sidebar.style.display == "flex" && e.clientX > window.innerWidth - sidebar.clientWidth) {
+    if (sidebar.style.display == "flex" && x > window.innerWidth - sidebar.clientWidth) {
         return;
     }
     if (Mousedown) {
         if (currentMode == 'bru' && shapes[shapes.length - 1] instanceof Brush) {
-            shapes[shapes.length - 1].addLine(prevX, prevY, e.clientX, e.clientY);
-            prevX = e.clientX;
-            prevY = e.clientY;
+            shapes[shapes.length - 1].addLine(prevX, prevY, x, y);
+            prevX = x;
+            prevY = y;
         }
         else if (currentMode == 'era') {
             for (let i = shapes.length - 1; i >= 0; i--) {
-                if (shapes[i].isInside(e.clientX, e.clientY)) {
+                if (shapes[i].isInside(x, y)) {
                     shapes[i].setLastEditedNow();
                     undoStack.push(shapes[i]);
                     shapes.splice(i, 1);
                 }
             }
-            prevX = e.clientX;
-            prevY = e.clientY;
+            prevX = x;
+            prevY = y;
         }
         else if (currentMode == 'poi') {
             for (let i = 0; i < shapes.length; i++) {
                 if (shapes[i].seeOutline) {
-                    shapes[i].move(e.clientX - prevX, e.clientY - prevY);
+                    shapes[i].move(x - prevX, x - prevY);
                 }
             }
-            prevX = e.clientX;
-            prevY = e.clientY;
+            prevX = x;
+            prevY = y;
         }
         else if ((currentMode == 'lin' || currentMode == 'rec' || currentMode == 'cir') && shapes[shapes.length - 1] instanceof Shape) {
             const shape = shapes.pop();
             if ((shape === null || shape === void 0 ? void 0 : shape.drawMode) == true) {
-                shape.endX = e.clientX;
-                shape.endY = e.clientY;
+                shape.endX = x;
+                shape.endY = y;
                 shapes.push(shape);
             }
             else {
-                shapes.push(new Shape(prevX, prevY, e.clientX, e.clientY, currentColor, currentlineW, currentFill, currentMode, true));
+                shapes.push(new Shape(prevX, prevY, x, y, currentColor, currentlineW, currentFill, currentMode, true));
             }
         }
         drawShapes();
     }
-});
+}
 window.addEventListener("keydown", (e) => {
     if (e.key == 'b') {
         setMode('bru', null);
