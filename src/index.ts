@@ -197,12 +197,15 @@ class Brush extends drawable {
         super(color, lineWidth, drawMode);
     }
 
-    public addLine(x1: number, y1: number, x2: number, y2: number): void {
+    public addLine(x1: number, y1: number, x2: number, y2: number, ctx : CanvasRenderingContext2D): void {
         
-            console.log("addLine from " + x1 + " " + y1 + " to " + x2 + " " + y2);
             this.lines.push(new Shape(x1, y1, x2, y2, this.color, this.lineWidth, false, 'lin', false));
             var circleRadius = 0.3928 * this.lineWidth - 0.444; // mithilfe einer ausgleichsgerade berechnet
             this.lines.push(new Shape(x2, y2, x2 + circleRadius, y2 + circleRadius, this.color, 1 , true, 'cir', false));
+
+            this.lines[this.lines.length - 1].draw(ctx);
+            this.lines[this.lines.length - 2].draw(ctx);
+            
         
         this.lastEdited = Date.now();
     }
@@ -335,8 +338,6 @@ function mouseup(x:number,y:number){
         shape.drawMode = false;
     }
 
-    drawShapes();
-
     prevX = -1;
     prevY = -1;
 }
@@ -363,7 +364,7 @@ function mousemove(x:number,y:number){
     if (Mousedown) {
         if (currentMode == 'bru' && shapes[shapes.length - 1] instanceof Brush) {
 
-                (shapes[shapes.length-1] as Brush).addLine(prevX, prevY, x, y);
+                (shapes[shapes.length-1] as Brush).addLine(prevX, prevY, x, y, ctx);
 
                 prevX = x;
                 prevY = y;
@@ -380,16 +381,18 @@ function mousemove(x:number,y:number){
             
                 prevX = x;
                 prevY = y;
+                drawShapes();
 
         } else if(currentMode == 'poi'){
             for (let i = 0; i < shapes.length; i++) {
                 if (shapes[i].seeOutline) {
-                    shapes[i].move(x - prevX, x - prevY);
+                    shapes[i].move(x - prevX, y - prevY);
                 }
             }
 
             prevX = x;
             prevY = y;
+            drawShapes();
 
         }else if ((currentMode == 'lin' || currentMode == 'rec' || currentMode == 'cir') && shapes[shapes.length - 1] instanceof Shape) {
             const shape: Shape = shapes.pop() as Shape;
@@ -401,8 +404,8 @@ function mousemove(x:number,y:number){
             }else{
                 shapes.push(new Shape(prevX, prevY, x, y, currentColor, currentlineW, currentFill, currentMode, true));
             }
+            drawShapes();
         }
-        drawShapes();
     }
 }
 

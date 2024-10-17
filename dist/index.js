@@ -149,11 +149,12 @@ class Brush extends drawable {
         super(color, lineWidth, drawMode);
         this.lines = [];
     }
-    addLine(x1, y1, x2, y2) {
-        console.log("addLine from " + x1 + " " + y1 + " to " + x2 + " " + y2);
+    addLine(x1, y1, x2, y2, ctx) {
         this.lines.push(new Shape(x1, y1, x2, y2, this.color, this.lineWidth, false, 'lin', false));
         var circleRadius = 0.3928 * this.lineWidth - 0.444;
         this.lines.push(new Shape(x2, y2, x2 + circleRadius, y2 + circleRadius, this.color, 1, true, 'cir', false));
+        this.lines[this.lines.length - 1].draw(ctx);
+        this.lines[this.lines.length - 2].draw(ctx);
         this.lastEdited = Date.now();
     }
     draw(ctx) {
@@ -257,7 +258,6 @@ function mouseup(x, y) {
     if (shape) {
         shape.drawMode = false;
     }
-    drawShapes();
     prevX = -1;
     prevY = -1;
 }
@@ -278,7 +278,7 @@ function mousemove(x, y) {
     }
     if (Mousedown) {
         if (currentMode == 'bru' && shapes[shapes.length - 1] instanceof Brush) {
-            shapes[shapes.length - 1].addLine(prevX, prevY, x, y);
+            shapes[shapes.length - 1].addLine(prevX, prevY, x, y, ctx);
             prevX = x;
             prevY = y;
         }
@@ -292,15 +292,17 @@ function mousemove(x, y) {
             }
             prevX = x;
             prevY = y;
+            drawShapes();
         }
         else if (currentMode == 'poi') {
             for (let i = 0; i < shapes.length; i++) {
                 if (shapes[i].seeOutline) {
-                    shapes[i].move(x - prevX, x - prevY);
+                    shapes[i].move(x - prevX, y - prevY);
                 }
             }
             prevX = x;
             prevY = y;
+            drawShapes();
         }
         else if ((currentMode == 'lin' || currentMode == 'rec' || currentMode == 'cir') && shapes[shapes.length - 1] instanceof Shape) {
             const shape = shapes.pop();
@@ -312,8 +314,8 @@ function mousemove(x, y) {
             else {
                 shapes.push(new Shape(prevX, prevY, x, y, currentColor, currentlineW, currentFill, currentMode, true));
             }
+            drawShapes();
         }
-        drawShapes();
     }
 }
 window.addEventListener("keydown", (e) => {
