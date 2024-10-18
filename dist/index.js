@@ -1,216 +1,41 @@
-"use strict";
+import { Shape } from './classes/Shape.js';
+import { Brush } from './classes/Brush.js';
+import { unfokusButtons, setColorPicker, setSliderValue } from './buttonEvents.js';
 const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
 canvas.height = window.innerHeight;
 canvas.width = window.innerWidth;
-var currentColor = '#000000';
-var currentlineW = 5;
-let currentFill = false;
-let currentMode = 'bru';
+const ctx = canvas.getContext("2d");
+export var currentColor = '#000000';
+export var currentlineW = 5;
+export let currentFill = false;
+export let currentMode = 'bru';
 let prevX = -1;
 let prevY = -1;
 let Mousedown = false;
 const keyLokalStorage = 'drawShapes';
 let shapes = [];
 let undoStack = [];
-class drawable {
-    constructor(color, lineWidth, drawMode) {
-        this.seeOutline = false;
-        this.color = color;
-        this.lineWidth = lineWidth;
-        this.drawMode = drawMode;
-        this.lastEdited = Date.now();
-    }
-    getLastEdited() {
-        return this.lastEdited;
-    }
-    setLastEditedNow() {
-        this.lastEdited = Date.now();
-    }
-}
-class Shape extends drawable {
-    constructor(startX, startY, endX, endY, color, lineWidth, fill, shape, drawMode) {
-        super(color, lineWidth, drawMode);
-        this.startX = startX;
-        this.startY = startY;
-        this.endX = endX;
-        this.endY = endY;
-        this.color = color;
-        this.lineWidth = lineWidth;
-        this.fill = fill;
-        this.shape = shape;
-    }
-    draw(ctx) {
-        if (this.seeOutline == true) {
-            this.drawoutline(ctx);
-        }
-        ctx.beginPath();
-        ctx.lineWidth = this.lineWidth;
-        ctx.strokeStyle = this.color;
-        ctx.fillStyle = this.color;
-        switch (this.shape) {
-            case 'rec':
-                ctx.rect(this.startX, this.startY, this.endX - this.startX, this.endY - this.startY);
-                break;
-            case 'cir':
-                ctx.arc(this.startX, this.startY, Math.sqrt((this.endX - this.startX) ** 2 + (this.endY - this.startY) ** 2), 0, Math.PI * 2);
-                break;
-            case 'lin':
-                ctx.moveTo(this.startX, this.startY);
-                ctx.lineTo(this.endX, this.endY);
-                ctx.stroke();
-                return;
-        }
-        if (this.fill) {
-            ctx.fill();
-        }
-        else {
-            ctx.stroke();
-        }
-    }
-    isInside(x, y) {
-        switch (this.shape) {
-            case 'rec':
-                return (x > this.startX && x < this.endX && y > this.startY && y < this.endY) || (x < this.startX && x > this.endX && y < this.startY && y > this.endY);
-            case 'cir':
-                return Math.sqrt((x - this.startX) ** 2 + (y - this.startY) ** 2) < Math.sqrt((this.endX - this.startX) ** 2 + (this.endY - this.startY) ** 2);
-            case 'lin':
-                const distance = Math.abs((this.endY - this.startY) * x - (this.endX - this.startX) * y + this.endX * this.startY - this.endY * this.startX) / Math.sqrt((this.endY - this.startY) ** 2 + (this.endX - this.startX) ** 2);
-                const isBetweenPoints = x >= Math.min(this.startX, this.endX) && x <= Math.max(this.startX, this.endX) && y >= Math.min(this.startY, this.endY) && y <= Math.max(this.startY, this.endY);
-                ;
-                return distance <= this.lineWidth / 2 && isBetweenPoints;
-        }
-        return false;
-    }
-    drawoutline(ctx) {
-        ctx.beginPath();
-        ctx.lineWidth = 2;
-        ctx.strokeStyle = '#000000';
-        ctx.setLineDash([5, 15]);
-        const distance = 20;
-        switch (this.shape) {
-            case 'rec':
-            case 'lin':
-                if (this.startX < this.endX && this.startY < this.endY) {
-                    ctx.rect(this.startX - distance, this.startY - distance, this.endX - this.startX + distance * 2, this.endY - this.startY + distance * 2);
-                }
-                else if (this.startX < this.endX && this.startY > this.endY) {
-                    ctx.rect(this.endX - distance, this.startY - distance, this.startX - this.endX + distance * 2, this.endY - this.startY + distance * 2);
-                }
-                else if (this.startX > this.endX && this.startY < this.endY) {
-                    ctx.rect(this.startX - distance, this.endY - distance, this.endX - this.startX + distance * 2, this.startY - this.endY + distance * 2);
-                }
-                else if (this.startX > this.endX && this.startY > this.endY) {
-                    ctx.rect(this.endX - distance, this.endY - distance, this.startX - this.endX + distance * 2, this.startY - this.endY + distance * 2);
-                }
-                break;
-            case 'cir':
-                let radius = Math.sqrt((this.endX - this.startX) ** 2 + (this.endY - this.startY) ** 2);
-                ctx.rect(this.startX - radius - distance, this.startY - radius - distance, radius * 2 + distance * 2, radius * 2 + distance * 2);
-                break;
-        }
-        ctx.stroke();
-        ctx.setLineDash([]);
-    }
-    move(x, y) {
-        this.startX += x;
-        this.endX += x;
-        this.startY += y;
-        this.endY += y;
-        this.setLastEditedNow();
-    }
-    maxoutPoints() {
-        switch (this.shape) {
-            case 'rec':
-            case 'lin':
-                if (this.startX < this.endX && this.startY < this.endY) {
-                    return [this.startX, this.startY, this.endX, this.endY];
-                }
-                else if (this.startX < this.endX && this.startY > this.endY) {
-                    return [this.endX, this.startY, this.startX, this.endY];
-                }
-                else if (this.startX > this.endX && this.startY < this.endY) {
-                    return [this.startX, this.endY, this.endX, this.startY];
-                }
-                else if (this.startX > this.endX && this.startY > this.endY) {
-                    return [this.endX, this.endY, this.startX, this.startY];
-                }
-                break;
-            case 'cir':
-                let radius = Math.sqrt((this.endX - this.startX) ** 2 + (this.endY - this.startY) ** 2);
-                return [this.startX - radius, this.startY - radius, this.startX + radius, this.startY + radius];
-                break;
-        }
-        return null;
-    }
-}
-class Brush extends drawable {
-    constructor(color, lineWidth, drawMode) {
-        super(color, lineWidth, drawMode);
-        this.lines = [];
-    }
-    addLine(x1, y1, x2, y2) {
-        console.log("addLine from " + x1 + " " + y1 + " to " + x2 + " " + y2);
-        this.lines.push(new Shape(x1, y1, x2, y2, this.color, this.lineWidth, false, 'lin', false));
-        var circleRadius = 0.3928 * this.lineWidth - 0.444;
-        this.lines.push(new Shape(x2, y2, x2 + circleRadius, y2 + circleRadius, this.color, 1, true, 'cir', false));
-        this.lastEdited = Date.now();
-    }
-    draw(ctx) {
-        for (let i = 0; i < this.lines.length; i++) {
-            this.lines[i].draw(ctx);
-        }
-        if (this.seeOutline == true) {
-            this.drawoutline(ctx);
-        }
-    }
-    isInside(x, y) {
-        for (let i = 0; i < this.lines.length; i++) {
-            if (this.lines[i].isInside(x, y)) {
-                return true;
-            }
-        }
-        return false;
-    }
-    drawoutline(ctx) {
-        let maxX = 0;
-        let maxY = 0;
-        let minX = window.innerWidth;
-        let minY = window.innerHeight;
-        for (let i = 0; i < this.lines.length; i++) {
-            let points = this.lines[i].maxoutPoints();
-            if (points == null) {
-                continue;
-            }
-            maxX = Math.max(maxX, points[2]);
-            maxY = Math.max(maxY, points[3]);
-            minX = Math.min(minX, points[0]);
-            minY = Math.min(minY, points[1]);
-        }
-        ctx.beginPath();
-        ctx.lineWidth = 2;
-        ctx.strokeStyle = '#000000';
-        ctx.setLineDash([5, 15]);
-        ctx.rect(minX - 20, minY - 20, maxX - minX + 40, maxY - minY + 40);
-        ctx.stroke();
-        ctx.setLineDash([]);
-    }
-    move(x, y) {
-        this.lastEdited = Date.now();
-        for (let i = 0; i < this.lines.length; i++) {
-            this.lines[i].move(x, y);
-        }
-    }
-}
 const nav = document.querySelector('nav');
 const aside = document.querySelector('aside');
+const sidebar = document.querySelector('.sidebar');
 window.addEventListener("mousedown", (e) => {
-    if (e.clientX < aside.clientWidth || e.clientY < nav.clientHeight) {
+    mousedown(e.clientX, e.clientY);
+});
+window.addEventListener("touchstart", (e) => {
+    if (e.touches[0] != undefined) {
+        mousedown(e.touches[0].clientX, e.touches[0].clientY);
+    }
+});
+function mousedown(x, y) {
+    if (x < aside.clientWidth || y < nav.clientHeight) {
+        return;
+    }
+    if (sidebar.style.display == "flex" && x > window.innerWidth - sidebar.clientWidth) {
         return;
     }
     Mousedown = true;
-    prevX = e.clientX;
-    prevY = e.clientY;
+    prevX = x;
+    prevY = y;
     if (currentMode != 'poi') {
         canvas.style.cursor = "crosshair";
     }
@@ -223,83 +48,109 @@ window.addEventListener("mousedown", (e) => {
     else if (currentMode == 'lin' || currentMode == 'rec' || currentMode == 'cir') {
         shapes.push(new Shape(prevX, prevY, prevX, prevY, currentColor, currentlineW, currentFill, currentMode, false));
     }
-});
+}
 window.addEventListener("mouseup", (e) => {
+    mouseup(e.clientX, e.clientY);
+});
+window.addEventListener("touchend", (e) => {
+    if (e.touches[0] != undefined) {
+        mouseup(e.touches[0].clientX, e.touches[0].clientY);
+    }
+});
+window.addEventListener("touchcancel", (e) => {
+    if (e.touches[0] != undefined) {
+        mouseup(e.touches[0].clientX, e.touches[0].clientY);
+    }
+});
+function mouseup(x, y) {
     Mousedown = false;
     canvas.style.cursor = "default";
     const shape = shapes[shapes.length - 1];
     if (shape) {
         shape.drawMode = false;
     }
-    drawShapes();
     prevX = -1;
     prevY = -1;
-});
+}
 window.addEventListener("mousemove", (e) => {
-    if (e.clientX < aside.clientWidth || e.clientY < nav.clientHeight) {
+    mousemove(e.clientX, e.clientY);
+});
+window.addEventListener("touchmove", (e) => {
+    if (e.touches[0] != undefined) {
+        mousemove(e.touches[0].clientX, e.touches[0].clientY);
+    }
+});
+function mousemove(x, y) {
+    if (x < aside.clientWidth || y < nav.clientHeight) {
+        return;
+    }
+    if (sidebar.style.display == "flex" && x > window.innerWidth - sidebar.clientWidth) {
         return;
     }
     if (Mousedown) {
         if (currentMode == 'bru' && shapes[shapes.length - 1] instanceof Brush) {
-            shapes[shapes.length - 1].addLine(prevX, prevY, e.clientX, e.clientY);
-            prevX = e.clientX;
-            prevY = e.clientY;
+            shapes[shapes.length - 1].addLine(prevX, prevY, x, y, ctx);
+            localStorage.setItem(keyLokalStorage, JSON.stringify(shapes));
+            prevX = x;
+            prevY = y;
         }
         else if (currentMode == 'era') {
             for (let i = shapes.length - 1; i >= 0; i--) {
-                if (shapes[i].isInside(e.clientX, e.clientY)) {
+                if (shapes[i].isInside(x, y)) {
                     shapes[i].setLastEditedNow();
                     undoStack.push(shapes[i]);
                     shapes.splice(i, 1);
                 }
             }
-            prevX = e.clientX;
-            prevY = e.clientY;
+            prevX = x;
+            prevY = y;
+            drawShapes();
         }
         else if (currentMode == 'poi') {
             for (let i = 0; i < shapes.length; i++) {
                 if (shapes[i].seeOutline) {
-                    shapes[i].move(e.clientX - prevX, e.clientY - prevY);
+                    shapes[i].move(x - prevX, y - prevY);
                 }
             }
-            prevX = e.clientX;
-            prevY = e.clientY;
+            prevX = x;
+            prevY = y;
+            drawShapes();
         }
         else if ((currentMode == 'lin' || currentMode == 'rec' || currentMode == 'cir') && shapes[shapes.length - 1] instanceof Shape) {
             const shape = shapes.pop();
             if ((shape === null || shape === void 0 ? void 0 : shape.drawMode) == true) {
-                shape.endX = e.clientX;
-                shape.endY = e.clientY;
+                shape.endX = x;
+                shape.endY = y;
                 shapes.push(shape);
             }
             else {
-                shapes.push(new Shape(prevX, prevY, e.clientX, e.clientY, currentColor, currentlineW, currentFill, currentMode, true));
+                shapes.push(new Shape(prevX, prevY, x, y, currentColor, currentlineW, currentFill, currentMode, true));
             }
+            drawShapes();
         }
-        drawShapes();
     }
-});
+}
 window.addEventListener("keydown", (e) => {
     if (e.key == 'b') {
-        setMode('bru');
+        setMode('bru', null);
     }
     else if (e.key == 'l') {
-        setMode('lin');
+        setMode('lin', null);
     }
     else if (e.key == 'e') {
-        setMode('era');
+        setMode('era', null);
     }
     else if (e.key == 'r') {
-        setMode('rec');
+        setMode('rec', null);
     }
     else if (e.key == 'c') {
-        setMode('cir');
+        setMode('cir', null);
     }
     else if (e.key == 'f') {
         currentFill = !currentFill;
     }
     else if (e.key == 'p') {
-        setMode('poi');
+        setMode('poi', null);
     }
     else if (e.key == 'ArrowUp') {
         currentlineW += 1;
@@ -309,7 +160,10 @@ window.addEventListener("keydown", (e) => {
     }
     else if (e.ctrlKey && e.key == 's') {
         e.preventDefault();
-        saveButton.click();
+        var link = document.createElement('a');
+        link.download = 'filename.png';
+        link.href = document.getElementById('canvas').toDataURL();
+        link.click();
     }
     else if (e.ctrlKey && e.key == 'z') {
         e.preventDefault();
@@ -320,6 +174,11 @@ window.addEventListener("keydown", (e) => {
         redo();
     }
 });
+window.addEventListener("resize", (e) => {
+    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth;
+    drawShapes();
+});
 function drawShapes() {
     localStorage.setItem(keyLokalStorage, JSON.stringify(shapes));
     ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
@@ -328,36 +187,28 @@ function drawShapes() {
         shapes[i].draw(ctx);
     }
 }
-function shapesFromJSON(shapesJSON) {
-    let shapes = [];
-    for (let i = 0; i < shapesJSON.length; i++) {
-        let shape = shapesJSON[i];
-        if (shape.shape) {
-            shapes.push(new Shape(shape.startX, shape.startY, shape.endX, shape.endY, shape.color, shape.lineWidth, shape.fill, shape.shape, shape.drawMode));
-        }
-        else {
-            let brush = new Brush(shape.color, shape.lineWidth, shape.drawMode);
-            for (let j = 0; j < shape.lines.length; j++) {
-                let line = shape.lines[j];
-                brush.lines.push(new Shape(line.startX, line.startY, line.endX, line.endY, line.color, line.lineWidth, line.fill, line.shape, line.drawMode));
-            }
-            shapes.push(brush);
-        }
-    }
-    return shapes;
-}
-function setMode(mode) {
+export function setMode(mode, source) {
     currentMode = mode;
+    unfokusButtons();
+    if (source != null) {
+        source.setAttribute("style", "background: #686868;");
+    }
     for (let i = 0; i < shapes.length; i++) {
         shapes[i].seeOutline = false;
     }
 }
-function setColorCustom(color) {
+export function setColorCustom(color) {
     currentColor = color;
-    colorPicker.value = color;
-    colorValue.innerText = color;
+    setColorPicker(color);
 }
-function undo() {
+export function setCurrentlineW(lineW) {
+    setSliderValue(lineW);
+    currentlineW = lineW;
+}
+export function setCurrentFill() {
+    currentFill = !currentFill;
+}
+export function undo() {
     if (shapes.length > 0) {
         let shape = shapes.pop();
         shape.setLastEditedNow();
@@ -365,7 +216,7 @@ function undo() {
         drawShapes();
     }
 }
-function redo() {
+export function redo() {
     if (undoStack.length > 0) {
         let shape = undoStack.pop();
         shape.setLastEditedNow();
@@ -398,89 +249,35 @@ function isInsideObjekt(x, y) {
     }
     return null;
 }
-window.addEventListener("resize", (e) => {
-    canvas.height = window.innerHeight;
-    canvas.width = window.innerWidth;
-    drawShapes();
-});
-const saveButton = document.getElementById("saveButton");
-saveButton.addEventListener("click", (e) => {
-    console.log("saveButton clicked");
-    var link = document.createElement('a');
-    link.download = 'filename.png';
-    link.href = document.getElementById('canvas').toDataURL();
-    link.click();
-});
-const brushButton = document.getElementById("brushButton");
-brushButton.addEventListener("click", (e) => {
-    setMode('bru');
-});
-const lineButton = document.getElementById("lineButton");
-lineButton.addEventListener("click", (e) => {
-    setMode('lin');
-});
-const circleButton = document.getElementById("circleButton");
-circleButton.addEventListener("click", (e) => {
-    setMode('cir');
-});
-const rectangleButton = document.getElementById("recktangleButton");
-rectangleButton.addEventListener("click", (e) => {
-    setMode('rec');
-});
-const eraserButton = document.getElementById("rubberButton");
-eraserButton.addEventListener("click", (e) => {
-    setMode('era');
-});
-const blueButton = document.getElementById("blueButton");
-blueButton.addEventListener("click", (e) => {
-    setColorCustom('#0000FF');
-});
-const redButton = document.getElementById("redButton");
-redButton.addEventListener("click", (e) => {
-    setColorCustom('#FF0000');
-});
-const greenButton = document.getElementById("greenButton");
-greenButton.addEventListener("click", (e) => {
-    setColorCustom('#009b00');
-});
-const pinkButton = document.getElementById("pinkButton");
-pinkButton.addEventListener("click", (e) => {
-    setColorCustom('#f200ff');
-});
-const yellowButton = document.getElementById("yellowButton");
-yellowButton.addEventListener("click", (e) => {
-    setColorCustom('#ffe000');
-});
-const undoButton = document.getElementById("undoButton");
-undoButton.addEventListener("click", (e) => {
-    undo();
-});
-const redoButton = document.getElementById("redoButton");
-redoButton.addEventListener("click", (e) => {
-    redo();
-});
-const colorPicker = document.getElementById("colorPicker");
-const colorValue = document.getElementById("colorValue");
-colorPicker.addEventListener("input", (e) => {
-    setColorCustom(colorPicker.value);
-});
-const slider = document.getElementById("slider");
-const sliderValue = document.getElementById("sliderValue");
-slider.addEventListener("input", (e) => {
-    sliderValue.innerText = slider.value;
-    currentlineW = parseInt(slider.value);
-});
-const fillButton = document.getElementById("fillButton");
-fillButton.addEventListener("click", (e) => {
-    currentFill = !currentFill;
-});
-const pointButton = document.getElementById("pointerButton");
-pointButton.addEventListener("click", (e) => {
-    setMode('poi');
-});
+function shapesFromJSON(shapesJSON) {
+    let shapes = [];
+    for (let i = 0; i < shapesJSON.length; i++) {
+        let shape = shapesJSON[i];
+        if (shape.shape) {
+            shapes.push(new Shape(shape.startX, shape.startY, shape.endX, shape.endY, shape.color, shape.lineWidth, shape.fill, shape.shape, shape.drawMode));
+        }
+        else {
+            let brush = new Brush(shape.color, shape.lineWidth, shape.drawMode);
+            for (let j = 0; j < shape.lines.length; j++) {
+                let line = shape.lines[j];
+                brush.lines.push(new Shape(line.startX, line.startY, line.endX, line.endY, line.color, line.lineWidth, line.fill, line.shape, line.drawMode));
+            }
+            shapes.push(brush);
+        }
+    }
+    return shapes;
+}
 if (localStorage.getItem(keyLokalStorage)) {
     let shapesJSON = JSON.parse(localStorage.getItem(keyLokalStorage));
     shapes = shapesFromJSON(shapesJSON);
     drawShapes();
+}
+function showSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    sidebar.style.display = 'flex';
+}
+function hideSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    sidebar.style.display = 'none';
 }
 //# sourceMappingURL=index.js.map

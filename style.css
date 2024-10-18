@@ -7,22 +7,23 @@ section {
 body {
   padding: 0;
   margin: 0;
-  
+  overflow: hidden;
+
   height: 100vh;
 }
 
-nav{
+nav {
   height: 4rem;
   width: 100%;
   background: #4c4c4a;
-  
-  align-items: center; 
+
+  align-items: center;
   justify-content: space-between;
   display: flex;
   position: fixed;
 }
 
-nav:hover{
+nav:hover {
   cursor: pointer;
 }
 
@@ -33,79 +34,80 @@ aside {
 
   margin-top: 4rem;
   padding-left: 20px;
-  padding-right: 20px; 
+  padding-right: 20px;
 
   border: 3px solid #4c4c4a;
   position: fixed;
 }
 
-aside:hover{
+aside:hover {
   cursor: pointer;
 }
 
 .sidebar {
-padding-left: 20px;
-padding-top: 20px; 
-position: fixed; 
-top: 0; 
-right: 0; 
-height: 100vh; 
-width: 230px; 
-z-index: 999; 
-background-color: #535353d6;
-backdrop-filter: blur(10px);
-display: none; 
-flex-direction: column; 
-align-items: flex-start; 
-justify-content: flex-start; 
+  padding-left: 20px;
+  padding-top: 20px;
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: 230px;
+  z-index: 999;
+  background-color: #535353d6;
+  display: none;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
 }
 
 .tools {
-margin-bottom: 25px;
-margin-top: -10px; 
+  margin-bottom: 25px;
+  margin-top: -10px;
 }
 
 .color {
   margin-bottom: 25px;
-  margin-top: -10px; 
+  margin-top: -10px;
 }
 
 .forms {
   margin-bottom: 25px;
-  margin-top: -10px; 
+  margin-top: -10px;
 }
 
 .Redo {
   margin-bottom: 25px;
-  margin-top: -10px; 
+  margin-top: -10px;
 }
 
-#saveButton, #saveButtonMobile {
-  background-color: #316bb3; 
-  color: white;          
-  padding: 7px 14px;     
-  border: none;          
-  border-radius: 25px;      
-  font-size: 16px;        
+#saveButton,
+#saveButtonMobile {
+  background-color: #316bb3;
+  color: white;
+  padding: 7px 14px;
+  border: none;
+  border-radius: 25px;
+  font-size: 16px;
   font-family: adobe-clean;
-  cursor: pointer;        
+  cursor: pointer;
   margin-right: 20px;
 }
 
-#saveButton:hover, #saveButtonMobile:hover {
-  background-color: #2b64ad;  
+#saveButton:hover,
+#saveButtonMobile:hover {
+  background-color: #2b64ad;
 }
 
 .menü {
-margin-right: 20px; 
+  margin-right: 20px;
 }
 
 h1 {
   font-family: adobe-clean;
-font-weight: 300;
-font-style: normal;
-color: white; 
-margin-left: 20px; 
+  font-weight: 300;
+  font-style: normal;
+  color: white;
+  margin-left: 20px;
 }
 
 h2 {
@@ -116,44 +118,71 @@ h2 {
   color: white;
 }
 
-p {
+p{
   font-family: adobe-clean;
-font-weight: 300;
-font-style: normal;
-color: white
+  font-weight: 300;
+  font-style: normal;
+  color: white;
 }
 
 h3 {
-font-family: adobe-clean;
-font-size: 12px;
-font-weight: 300;
-font-style: normal;
-color: white
+  font-family: adobe-clean;
+  font-size: 12px;
+  font-weight: 300;
+  font-style: normal;
+  color: white;
 }
-#pinkButton, #yellowButton, #redButton, #blueButton, #greenButton, #circleButton, #lineButton, #brushButton, #rubberButton, #recktanglebutton, #undoButton, #redoButton, #pointerButton, #fillButton, #pinkButtonMobile, #yellowButtonMobile, #redButtonMobile, #blueButtonMobile, #greenButtonMobile, #circleButtonMobile, #lineButtonMobile, #brushButtonMobile, #rubberButtonMobile, #recktanglebuttonMobile, #undoButtonMobile, #redoButtonMobile, #pointerButtonMobile, #fillButtonMobile {
-width: 30px;
+#pinkButton,
+#yellowButton,
+#redButton,
+#blueButton,
+#greenButton,
+#circleButton,
+#lineButton,
+#brushButton,
+#rubberButton,
+#recktanglebutton,
+#undoButton,
+#redoButton,
+#pointerButton,
+#fillButton,
+#pinkButtonMobile,
+#yellowButtonMobile,
+#redButtonMobile,
+#blueButtonMobile,
+#greenButtonMobile,
+#circleButtonMobile,
+#lineButtonMobile,
+#brushButtonMobile,
+#rubberButtonMobile,
+#recktanglebuttonMobile,
+#undoButtonMobile,
+#redoButtonMobile,
+#pointerButtonMobile,
+#fillButtonMobile {
+  width: 30px;
 }
 
-#slider, #sliderMobile {
-width: 4rem; 
+#slider,
+#sliderMobile {
+  width: 4rem;
 }
 
 @media (max-width: 768px) {
-  .hideOnMobile{
-  display: none; 
+  .hideOnMobile {
+    display: none;
   }
 
-  
   nav {
     width: 100%;
     height: 80px;
-    display: flex; 
+    display: flex;
   }
 }
 
 @media (min-width: 768px) {
-  .menü{
-  display: none; 
+  .menü {
+    display: none;
   }
 }
 
