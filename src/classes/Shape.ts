@@ -69,7 +69,7 @@ export class Shape extends drawable {
 
                 const isBetweenPoints: boolean = x >= Math.min(this.startX, this.endX) && x <= Math.max(this.startX, this.endX) && y >= Math.min(this.startY, this.endY) && y <= Math.max(this.startY, this.endY);;
                 
-                return distance <= this.lineWidth / 2 && isBetweenPoints;
+                return distance <= this.lineWidth *1.5 && isBetweenPoints; // 1,5 ist ein wer der der ausprobieren rausgefunden wurde
         }
         return false;
     }

@@ -2,7 +2,7 @@ import { drawable } from "./classes/Drawable.js";
 import { Shape } from "./classes/Shape.js";
 import { Brush } from "./classes/Brush.js";
 
-import {unfokusButtons,setColorPicker,setSliderValue,} from "./buttonEvents.js";
+import {setColorPicker,setSliderValue,updateUndoRedoButton} from "./buttonEvents.js";
 
 //deklaration
 const canvas = document.getElementById("canvas") as HTMLCanvasElement;
@@ -86,6 +86,7 @@ function mousedown(x: number, y: number) {
       )
     );
   }
+  updateUndoRedoButton();
 }
 
 window.addEventListener("mouseup", (e) => {
@@ -208,6 +209,7 @@ window.addEventListener("resize", (e) => {
 
 function drawShapes() {
   localStorage.setItem(keyLokalStorage, JSON.stringify(shapes));
+  updateUndoRedoButton();
   ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
   shapes.sort((a, b) => a.getLastEdited() - b.getLastEdited());
 
@@ -242,24 +244,32 @@ export function getCurrentFill() {
   return currentFill;
 }
 
-export function undo(): boolean {
+export function undo(){
   if (shapes.length > 0) {
     let shape = shapes.pop() as drawable;
     shape.setLastEditedNow();
     undoStack.push(shape);
     drawShapes();
   }
-  return shapes.length <= 0;
+  updateUndoRedoButton();
 }
 
-export function redo(): boolean {
+export function redo(){
   if (undoStack.length > 0) {
     let shape = undoStack.pop() as drawable;
     shape.setLastEditedNow();
     shapes.push(shape);
     drawShapes();
   }
-  return undoStack.length <= 0;
+  updateUndoRedoButton();
+}
+
+export function getIfShapesEmpty(){
+  return shapes.length == 0;
+}
+
+export function getIfUndoEmpty(){
+  return undoStack.length == 0;
 }
 
 function select(x: number, y: number) {
@@ -338,4 +348,5 @@ if (localStorage.getItem(keyLokalStorage)) {
   let shapesJSON = JSON.parse(localStorage.getItem(keyLokalStorage) as string);
   shapes = shapesFromJSON(shapesJSON);
   drawShapes();
+  updateUndoRedoButton();
 }

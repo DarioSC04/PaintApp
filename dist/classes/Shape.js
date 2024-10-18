@@ -49,7 +49,7 @@ export class Shape extends drawable {
                 const distance = Math.abs((this.endY - this.startY) * x - (this.endX - this.startX) * y + this.endX * this.startY - this.endY * this.startX) / Math.sqrt(Math.pow((this.endY - this.startY), 2) + Math.pow((this.endX - this.startX), 2));
                 const isBetweenPoints = x >= Math.min(this.startX, this.endX) && x <= Math.max(this.startX, this.endX) && y >= Math.min(this.startY, this.endY) && y <= Math.max(this.startY, this.endY);
                 ;
-                return distance <= this.lineWidth / 2 && isBetweenPoints;
+                return distance <= this.lineWidth * 1.5 && isBetweenPoints;
         }
         return false;
     }

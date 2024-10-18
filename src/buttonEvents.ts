@@ -1,4 +1,4 @@
-import {setCurrentlineW,setMode,redo,undo,setColorCustom,setCurrentFill,getCurrentFill } from "./index.js";
+import {setCurrentlineW,setMode,redo,undo,setColorCustom,setCurrentFill,getCurrentFill,getIfShapesEmpty,getIfUndoEmpty } from "./index.js";
 
 const saveButton = document.getElementById("saveButton") as HTMLElement;
 saveButton.addEventListener("click", (e) => {
@@ -128,32 +128,20 @@ yellowButtonMobile.addEventListener("click", (e) => {
 
 const undoButton = document.getElementById("undoButton") as HTMLInputElement;
 undoButton.addEventListener("click", (e) => {
-    const emptyUndo:boolean = undo();
-
-    if(emptyUndo){
-        undoButton.src = "Hover_Buttons/Undo_hover.png";
-    }else{
-        undoButton.src = "Tools/UndoButton.png";
-    }
+    undo();
 });
 
-const undoButtonMobile = document.getElementById("undoButtonMobile") as HTMLElement;
+const undoButtonMobile = document.getElementById("undoButtonMobile") as HTMLInputElement;
 undoButtonMobile.addEventListener("click", (e) => {
     undo();
 });
 
 const redoButton = document.getElementById("redoButton") as HTMLInputElement;
 redoButton.addEventListener("click", (e) => {
-    const emptyRedo:boolean = redo();
-
-    if(emptyRedo){
-        redoButton.src = "Hover_Buttons/redo_hover.png";
-    }else{
-        redoButton.src = "Tools/RedoButton.png";
-    }
+    redo();
 });
 
-const redoButtonMobile = document.getElementById("redoButtonMobile") as HTMLElement;
+const redoButtonMobile = document.getElementById("redoButtonMobile") as HTMLInputElement;
 redoButtonMobile.addEventListener("click", (e) => {
     redo();
 
@@ -241,4 +229,26 @@ export function setSliderValue(value: number){
     sliderValue.innerText = value.toString();
     sliderMobile.value = value.toString();
     sliderValueMobile.innerText = value.toString();
+}
+
+export function updateUndoRedoButton() {
+    const UndoEmpty: boolean = getIfShapesEmpty();
+    const RedoEmpty: boolean = getIfUndoEmpty();
+
+
+    if (UndoEmpty) {
+        undoButton.src = "Hover_Buttons/Undo_hover.png";
+        undoButtonMobile.src = "Hover_Buttons/Undo_hover.png";
+    } else {
+        undoButton.src = "Tools/UndoButton.png";
+        undoButtonMobile.src = "Tools/UndoButton.png";
+    }
+
+    if (RedoEmpty) {
+        redoButton.src = "Hover_Buttons/Redo_hover.png";
+        redoButtonMobile.src = "Hover_Buttons/Redo_hover.png";
+    } else {
+        redoButton.src = "Tools/RedoButton.png";
+        redoButtonMobile.src = "Tools/RedoButton.png";
+    }
 }

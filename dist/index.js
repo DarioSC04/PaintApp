@@ -1,6 +1,6 @@
 import { Shape } from "./classes/Shape.js";
 import { Brush } from "./classes/Brush.js";
-import { setColorPicker, setSliderValue, } from "./buttonEvents.js";
+import { setColorPicker, setSliderValue, updateUndoRedoButton } from "./buttonEvents.js";
 const canvas = document.getElementById("canvas");
 canvas.height = window.innerHeight;
 canvas.width = window.innerWidth;
@@ -51,6 +51,7 @@ function mousedown(x, y) {
         currentMode == "cir") {
         shapes.push(new Shape(prevX, prevY, prevX, prevY, currentColor, currentlineW, currentFill, currentMode, false));
     }
+    updateUndoRedoButton();
 }
 window.addEventListener("mouseup", (e) => {
     mouseup(e.clientX, e.clientY);
@@ -142,6 +143,7 @@ window.addEventListener("resize", (e) => {
 });
 function drawShapes() {
     localStorage.setItem(keyLokalStorage, JSON.stringify(shapes));
+    updateUndoRedoButton();
     ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
     shapes.sort((a, b) => a.getLastEdited() - b.getLastEdited());
     for (let i = 0; i < shapes.length; i++) {
@@ -175,7 +177,7 @@ export function undo() {
         undoStack.push(shape);
         drawShapes();
     }
-    return shapes.length <= 0;
+    updateUndoRedoButton();
 }
 export function redo() {
     if (undoStack.length > 0) {
@@ -184,7 +186,13 @@ export function redo() {
         shapes.push(shape);
         drawShapes();
     }
-    return undoStack.length <= 0;
+    updateUndoRedoButton();
+}
+export function getIfShapesEmpty() {
+    return shapes.length == 0;
+}
+export function getIfUndoEmpty() {
+    return undoStack.length == 0;
 }
 function select(x, y) {
     let shape = isInsideObjekt(x, y);
@@ -233,5 +241,6 @@ if (localStorage.getItem(keyLokalStorage)) {
     let shapesJSON = JSON.parse(localStorage.getItem(keyLokalStorage));
     shapes = shapesFromJSON(shapesJSON);
     drawShapes();
+    updateUndoRedoButton();
 }
 //# sourceMappingURL=index.js.map
