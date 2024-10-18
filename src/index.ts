@@ -198,42 +198,6 @@ function mousemove(x: number, y: number) {
   }
 }
 
-window.addEventListener("keydown", (e) => {
-  if (e.key == "b") {
-    setMode("bru");
-  } else if (e.key == "l") {
-    setMode("lin");
-  } else if (e.key == "e") {
-    setMode("era");
-  } else if (e.key == "r") {
-    setMode("rec");
-  } else if (e.key == "c") {
-    setMode("cir");
-  } else if (e.key == "f") {
-    currentFill = !currentFill;
-  } else if (e.key == "p") {
-    setMode("poi");
-  } else if (e.key == "ArrowUp") {
-    currentlineW += 1;
-  } else if (e.key == "ArrowDown") {
-    currentlineW -= 1;
-  } else if (e.ctrlKey && e.key == "s") {
-    e.preventDefault();
-    var link = document.createElement("a");
-    link.download = "filename.png";
-    link.href = (
-      document.getElementById("canvas") as HTMLCanvasElement
-    ).toDataURL();
-    link.click();
-  } else if (e.ctrlKey && e.key == "z") {
-    e.preventDefault();
-    undo();
-  } else if (e.ctrlKey && e.key == "y") {
-    e.preventDefault();
-    redo();
-  }
-});
-
 window.addEventListener("resize", (e) => {
   canvas.height = window.innerHeight;
   canvas.width = window.innerWidth;
@@ -274,22 +238,28 @@ export function setCurrentFill() {
   currentFill = !currentFill;
 }
 
-export function undo() {
+export function getCurrentFill() {
+  return currentFill;
+}
+
+export function undo(): boolean {
   if (shapes.length > 0) {
     let shape = shapes.pop() as drawable;
     shape.setLastEditedNow();
     undoStack.push(shape);
     drawShapes();
   }
+  return shapes.length <= 0;
 }
 
-export function redo() {
+export function redo(): boolean {
   if (undoStack.length > 0) {
     let shape = undoStack.pop() as drawable;
     shape.setLastEditedNow();
     shapes.push(shape);
     drawShapes();
   }
+  return undoStack.length <= 0;
 }
 
 function select(x: number, y: number) {

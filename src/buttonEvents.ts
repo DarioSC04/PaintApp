@@ -1,4 +1,4 @@
-import {setCurrentlineW,setMode,redo,undo,setColorCustom,setCurrentFill } from "./index.js";
+import {setCurrentlineW,setMode,redo,undo,setColorCustom,setCurrentFill,getCurrentFill } from "./index.js";
 
 const saveButton = document.getElementById("saveButton") as HTMLElement;
 saveButton.addEventListener("click", (e) => {
@@ -17,47 +17,67 @@ saveButtonMobile.addEventListener("click", (e) => {
 
 const brushButton = document.getElementById("brushButton") as HTMLInputElement;
 brushButton.addEventListener("click", (e) => {
+    unfokusButtons();
+    brushButton.src = "Hover_Buttons/brush_hover.png";
     setMode('bru');
 })
 const brushButtonMobile = document.getElementById("brushButtonMobile") as HTMLInputElement;
 brushButtonMobile.addEventListener("click", (e) => {
+    unfokusButtons();
+    brushButtonMobile.src = "Hover_Buttons/brush_hover.png";
     setMode('bru');
 })
 
 const lineButton = document.getElementById("lineButton") as HTMLInputElement;
 lineButton.addEventListener("click", (e) => {
+    unfokusButtons();
+    lineButton.src = "Hover_Buttons/line_hover.png";
     setMode('lin');
 })
 const lineButtonMobile = document.getElementById("lineButtonMobile") as HTMLInputElement;
 lineButtonMobile.addEventListener("click", (e) => {
+    unfokusButtons();
+    lineButtonMobile.src = "Hover_Buttons/line_hover.png";
     setMode('lin');
 })
 
 const circleButton = document.getElementById("circleButton") as HTMLInputElement;
 circleButton.addEventListener("click", (e) => {
+    unfokusButtons();
+    circleButton.src = "Hover_Buttons/circle_hover.png";
     setMode('cir');
 })
 const circleButtonMobile = document.getElementById("circleButtonMobile") as HTMLInputElement;
 circleButtonMobile.addEventListener("click", (e) => {
+    unfokusButtons();
+    circleButtonMobile.src = "Hover_Buttons/circle_hover.png";
     setMode('cir');
 })
 
 const rectangleButton = document.getElementById("recktangleButton") as HTMLInputElement;
 rectangleButton.addEventListener("click", (e) => {
+    unfokusButtons();
+    rectangleButton.src = "Hover_Buttons/recktangle_hover.png";
     setMode('rec');
 })
 const rectangleButtonMobile = document.getElementById("recktangleButtonMobile") as HTMLInputElement;
 rectangleButtonMobile.addEventListener("click", (e) => {
+    unfokusButtons();
+    rectangleButtonMobile.src = "Hover_Buttons/recktangle_hover.png";
     setMode('rec');
 })
 
 const eraserButton = document.getElementById("rubberButton") as HTMLInputElement;
 eraserButton.addEventListener("click", (e) => {
+    unfokusButtons();
+    eraserButton.src = "Hover_Buttons/rubber_hover.png";
    setMode('era');
 
 })
 const eraserButtonMobile = document.getElementById("rubberButtonMobile") as HTMLInputElement;
 eraserButtonMobile.addEventListener("click", (e) => {
+    unfokusButtons();
+    eraserButtonMobile.src = "Hover_Buttons/rubber_hover.png";
     setMode('era');
 })
 
@@ -106,9 +126,15 @@ yellowButtonMobile.addEventListener("click", (e) => {
     setColorCustom('#ffe000');
 })
 
-const undoButton = document.getElementById("undoButton") as HTMLElement;
+const undoButton = document.getElementById("undoButton") as HTMLInputElement;
 undoButton.addEventListener("click", (e) => {
-    undo();
+    const emptyUndo:boolean = undo();
+
+    if(emptyUndo){
+        undoButton.src = "Hover_Buttons/Undo_hover.png";
+    }else{
+        undoButton.src = "Tools/UndoButton.png";
+    }
 });
 
 const undoButtonMobile = document.getElementById("undoButtonMobile") as HTMLElement;
@@ -118,13 +144,19 @@ undoButtonMobile.addEventListener("click", (e) => {
 
 const redoButton = document.getElementById("redoButton") as HTMLInputElement;
 redoButton.addEventListener("click", (e) => {
-    redo();
-    redoButton.src = "Hover_Buttons/Redo_hover.png";
+    const emptyRedo:boolean = redo();
+
+    if(emptyRedo){
+        redoButton.src = "Hover_Buttons/redo_hover.png";
+    }else{
+        redoButton.src = "Tools/RedoButton.png";
+    }
 });
 
 const redoButtonMobile = document.getElementById("redoButtonMobile") as HTMLElement;
 redoButtonMobile.addEventListener("click", (e) => {
     redo();
+
 });
 
 const colorPicker = document.getElementById("colorPicker") as HTMLInputElement;
@@ -154,6 +186,13 @@ sliderMobile.addEventListener("input", (e) => {
 const fillButton = document.getElementById("fillButton") as HTMLInputElement;
 fillButton.addEventListener("click", (e) => {
     setCurrentFill();
+    
+    if(getCurrentFill()){
+        fillButton.src = "Hover_Buttons/fill_hover.png";
+    } else {
+        fillButton.src = "Color Images/fill.png";
+    }
+
 })
 const fillButtonMobile = document.getElementById("fillButtonMobile") as HTMLInputElement;
 fillButtonMobile.addEventListener("click", (e) => {
@@ -162,10 +201,14 @@ fillButtonMobile.addEventListener("click", (e) => {
 
 const pointButton = document.getElementById("pointerButton") as HTMLInputElement;
 pointButton.addEventListener("click", (e) => {
+    unfokusButtons();
+    pointButton.src = "Hover_Buttons/pointer_hover.png";
     setMode('poi');
 })
 const pointButtonMobile = document.getElementById("pointerButtonMobile") as HTMLInputElement;
 pointButtonMobile.addEventListener("click", (e) => {
+    unfokusButtons();
+    pointButtonMobile.src = "Hover_Buttons/pointer_hover.png";
     setMode('poi');
 })
 
@@ -173,14 +216,14 @@ export function unfokusButtons(){
     brushButton.src = "Tools/paint-brush.png";
     lineButton.src = "Shape/line.png";
     circleButton.src = "Shape/circle.png";
-    rectangleButton.src = "Shape/rectangle.png";
+    rectangleButton.src = "Shape/recktangle.png";
     eraserButton.src = "Tools/rubber.png";
     pointButton.src = "Tools/pointer.png";
 
     brushButtonMobile.src = "Tools/paint-brush.png";
     lineButtonMobile.src = "Shape/line.png";
     circleButtonMobile.src = "Shape/circle.png";
-    rectangleButtonMobile.src = "Shape/rectangle.png";
+    rectangleButtonMobile.src = "Shape/recktangle.png";
     eraserButtonMobile.src = "Tools/rubber.png";
     pointButtonMobile.src = "Tools/pointer.png";
 }
