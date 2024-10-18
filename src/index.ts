@@ -200,19 +200,19 @@ function mousemove(x: number, y: number) {
 
 window.addEventListener("keydown", (e) => {
   if (e.key == "b") {
-    setMode("bru", null);
+    setMode("bru");
   } else if (e.key == "l") {
-    setMode("lin", null);
+    setMode("lin");
   } else if (e.key == "e") {
-    setMode("era", null);
+    setMode("era");
   } else if (e.key == "r") {
-    setMode("rec", null);
+    setMode("rec");
   } else if (e.key == "c") {
-    setMode("cir", null);
+    setMode("cir");
   } else if (e.key == "f") {
     currentFill = !currentFill;
   } else if (e.key == "p") {
-    setMode("poi", null);
+    setMode("poi");
   } else if (e.key == "ArrowUp") {
     currentlineW += 1;
   } else if (e.key == "ArrowDown") {
@@ -252,7 +252,7 @@ function drawShapes() {
   }
 }
 
-export function setMode(mode: string, source: HTMLElement | null) {
+export function setMode(mode: string) {
   currentMode = mode;
    
   for (let i = 0; i < shapes.length; i++) {

@@ -15,43 +15,43 @@ saveButtonMobile.addEventListener("click", (e) => {
 });
 const brushButton = document.getElementById("brushButton");
 brushButton.addEventListener("click", (e) => {
-    setMode('bru', e.target);
+    setMode('bru');
 });
 const brushButtonMobile = document.getElementById("brushButtonMobile");
 brushButtonMobile.addEventListener("click", (e) => {
-    setMode('bru', e.target);
+    setMode('bru');
 });
 const lineButton = document.getElementById("lineButton");
 lineButton.addEventListener("click", (e) => {
-    setMode('lin', e.target);
+    setMode('lin');
 });
 const lineButtonMobile = document.getElementById("lineButtonMobile");
 lineButtonMobile.addEventListener("click", (e) => {
-    setMode('lin', e.target);
+    setMode('lin');
 });
 const circleButton = document.getElementById("circleButton");
 circleButton.addEventListener("click", (e) => {
-    setMode('cir', e.target);
+    setMode('cir');
 });
 const circleButtonMobile = document.getElementById("circleButtonMobile");
 circleButtonMobile.addEventListener("click", (e) => {
-    setMode('cir', e.target);
+    setMode('cir');
 });
 const rectangleButton = document.getElementById("recktangleButton");
 rectangleButton.addEventListener("click", (e) => {
-    setMode('rec', e.target);
+    setMode('rec');
 });
 const rectangleButtonMobile = document.getElementById("recktangleButtonMobile");
 rectangleButtonMobile.addEventListener("click", (e) => {
-    setMode('rec', e.target);
+    setMode('rec');
 });
 const eraserButton = document.getElementById("rubberButton");
 eraserButton.addEventListener("click", (e) => {
-    setMode('era', e.target);
+    setMode('era');
 });
 const eraserButtonMobile = document.getElementById("rubberButtonMobile");
 eraserButtonMobile.addEventListener("click", (e) => {
-    setMode('era', e.target);
+    setMode('era');
 });
 const blueButton = document.getElementById("blueButton");
 blueButton.addEventListener("click", (e) => {
@@ -104,6 +104,7 @@ undoButtonMobile.addEventListener("click", (e) => {
 const redoButton = document.getElementById("redoButton");
 redoButton.addEventListener("click", (e) => {
     redo();
+    redoButton.src = "Hover_Buttons/Redo_hover.png";
 });
 const redoButtonMobile = document.getElementById("redoButtonMobile");
 redoButtonMobile.addEventListener("click", (e) => {
@@ -139,25 +140,25 @@ fillButtonMobile.addEventListener("click", (e) => {
 });
 const pointButton = document.getElementById("pointerButton");
 pointButton.addEventListener("click", (e) => {
-    setMode('poi', e.target);
+    setMode('poi');
 });
 const pointButtonMobile = document.getElementById("pointerButtonMobile");
 pointButtonMobile.addEventListener("click", (e) => {
-    setMode('poi', e.target);
+    setMode('poi');
 });
 export function unfokusButtons() {
-    brushButton.setAttribute("style", "background: #535353;");
-    lineButton.setAttribute("style", "background: #535353;");
-    circleButton.setAttribute("style", "background: #535353;");
-    rectangleButton.setAttribute("style", "background: #535353;");
-    eraserButton.setAttribute("style", "background: #535353;");
-    pointButton.setAttribute("style", "background: #535353;");
-    brushButtonMobile.setAttribute("style", "background: #535353;");
-    lineButtonMobile.setAttribute("style", "background: #535353;");
-    circleButtonMobile.setAttribute("style", "background: #535353;");
-    rectangleButtonMobile.setAttribute("style", "background: #535353;");
-    eraserButtonMobile.setAttribute("style", "background: #535353;");
-    pointButtonMobile.setAttribute("style", "background: #535353;");
+    brushButton.src = "Tools/paint-brush.png";
+    lineButton.src = "Shape/line.png";
+    circleButton.src = "Shape/circle.png";
+    rectangleButton.src = "Shape/rectangle.png";
+    eraserButton.src = "Tools/rubber.png";
+    pointButton.src = "Tools/pointer.png";
+    brushButtonMobile.src = "Tools/paint-brush.png";
+    lineButtonMobile.src = "Shape/line.png";
+    circleButtonMobile.src = "Shape/circle.png";
+    rectangleButtonMobile.src = "Shape/rectangle.png";
+    eraserButtonMobile.src = "Tools/rubber.png";
+    pointButtonMobile.src = "Tools/pointer.png";
 }
 export function setColorPicker(color) {
     colorPicker.value = color;

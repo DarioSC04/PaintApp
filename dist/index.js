@@ -1,23 +1,23 @@
-import { Shape } from './classes/Shape.js';
-import { Brush } from './classes/Brush.js';
-import { unfokusButtons, setColorPicker, setSliderValue } from './buttonEvents.js';
+import { Shape } from "./classes/Shape.js";
+import { Brush } from "./classes/Brush.js";
+import { setColorPicker, setSliderValue, } from "./buttonEvents.js";
 const canvas = document.getElementById("canvas");
 canvas.height = window.innerHeight;
 canvas.width = window.innerWidth;
 const ctx = canvas.getContext("2d");
-export var currentColor = '#000000';
+export var currentColor = "#000000";
 export var currentlineW = 5;
 export let currentFill = false;
-export let currentMode = 'bru';
+export let currentMode = "bru";
 let prevX = -1;
 let prevY = -1;
 let Mousedown = false;
-const keyLokalStorage = 'drawShapes';
+const keyLokalStorage = "drawShapes";
 let shapes = [];
 let undoStack = [];
-const nav = document.querySelector('nav');
-const aside = document.querySelector('aside');
-const sidebar = document.querySelector('.sidebar');
+const nav = document.querySelector("nav");
+const aside = document.querySelector("aside");
+const sidebar = document.querySelector(".sidebar");
 window.addEventListener("mousedown", (e) => {
     mousedown(e.clientX, e.clientY);
 });
@@ -30,22 +30,25 @@ function mousedown(x, y) {
     if (x < aside.clientWidth || y < nav.clientHeight) {
         return;
     }
-    if (sidebar.style.display == "flex" && x > window.innerWidth - sidebar.clientWidth) {
+    if (sidebar.style.display == "flex" &&
+        x > window.innerWidth - sidebar.clientWidth) {
         return;
     }
     Mousedown = true;
     prevX = x;
     prevY = y;
-    if (currentMode != 'poi') {
+    if (currentMode != "poi") {
         canvas.style.cursor = "crosshair";
     }
-    if (currentMode == 'bru') {
+    if (currentMode == "bru") {
         shapes.push(new Brush(currentColor, currentlineW, true));
     }
-    else if (currentMode == 'poi') {
+    else if (currentMode == "poi") {
         select(prevX, prevY);
     }
-    else if (currentMode == 'lin' || currentMode == 'rec' || currentMode == 'cir') {
+    else if (currentMode == "lin" ||
+        currentMode == "rec" ||
+        currentMode == "cir") {
         shapes.push(new Shape(prevX, prevY, prevX, prevY, currentColor, currentlineW, currentFill, currentMode, false));
     }
 }
@@ -84,17 +87,18 @@ function mousemove(x, y) {
     if (x < aside.clientWidth || y < nav.clientHeight) {
         return;
     }
-    if (sidebar.style.display == "flex" && x > window.innerWidth - sidebar.clientWidth) {
+    if (sidebar.style.display == "flex" &&
+        x > window.innerWidth - sidebar.clientWidth) {
         return;
     }
     if (Mousedown) {
-        if (currentMode == 'bru' && shapes[shapes.length - 1] instanceof Brush) {
+        if (currentMode == "bru" && shapes[shapes.length - 1] instanceof Brush) {
             shapes[shapes.length - 1].addLine(prevX, prevY, x, y, ctx);
             localStorage.setItem(keyLokalStorage, JSON.stringify(shapes));
             prevX = x;
             prevY = y;
         }
-        else if (currentMode == 'era') {
+        else if (currentMode == "era") {
             for (let i = shapes.length - 1; i >= 0; i--) {
                 if (shapes[i].isInside(x, y)) {
                     shapes[i].setLastEditedNow();
@@ -106,7 +110,7 @@ function mousemove(x, y) {
             prevY = y;
             drawShapes();
         }
-        else if (currentMode == 'poi') {
+        else if (currentMode == "poi") {
             for (let i = 0; i < shapes.length; i++) {
                 if (shapes[i].seeOutline) {
                     shapes[i].move(x - prevX, y - prevY);
@@ -116,7 +120,8 @@ function mousemove(x, y) {
             prevY = y;
             drawShapes();
         }
-        else if ((currentMode == 'lin' || currentMode == 'rec' || currentMode == 'cir') && shapes[shapes.length - 1] instanceof Shape) {
+        else if ((currentMode == "lin" || currentMode == "rec" || currentMode == "cir") &&
+            shapes[shapes.length - 1] instanceof Shape) {
             const shape = shapes.pop();
             if ((shape === null || shape === void 0 ? void 0 : shape.drawMode) == true) {
                 shape.endX = x;
@@ -131,45 +136,45 @@ function mousemove(x, y) {
     }
 }
 window.addEventListener("keydown", (e) => {
-    if (e.key == 'b') {
-        setMode('bru', null);
+    if (e.key == "b") {
+        setMode("bru");
     }
-    else if (e.key == 'l') {
-        setMode('lin', null);
+    else if (e.key == "l") {
+        setMode("lin");
     }
-    else if (e.key == 'e') {
-        setMode('era', null);
+    else if (e.key == "e") {
+        setMode("era");
     }
-    else if (e.key == 'r') {
-        setMode('rec', null);
+    else if (e.key == "r") {
+        setMode("rec");
     }
-    else if (e.key == 'c') {
-        setMode('cir', null);
+    else if (e.key == "c") {
+        setMode("cir");
     }
-    else if (e.key == 'f') {
+    else if (e.key == "f") {
         currentFill = !currentFill;
     }
-    else if (e.key == 'p') {
-        setMode('poi', null);
+    else if (e.key == "p") {
+        setMode("poi");
     }
-    else if (e.key == 'ArrowUp') {
+    else if (e.key == "ArrowUp") {
         currentlineW += 1;
     }
-    else if (e.key == 'ArrowDown') {
+    else if (e.key == "ArrowDown") {
         currentlineW -= 1;
     }
-    else if (e.ctrlKey && e.key == 's') {
+    else if (e.ctrlKey && e.key == "s") {
         e.preventDefault();
-        var link = document.createElement('a');
-        link.download = 'filename.png';
-        link.href = document.getElementById('canvas').toDataURL();
+        var link = document.createElement("a");
+        link.download = "filename.png";
+        link.href = document.getElementById("canvas").toDataURL();
         link.click();
     }
-    else if (e.ctrlKey && e.key == 'z') {
+    else if (e.ctrlKey && e.key == "z") {
         e.preventDefault();
         undo();
     }
-    else if (e.ctrlKey && e.key == 'y') {
+    else if (e.ctrlKey && e.key == "y") {
         e.preventDefault();
         redo();
     }
@@ -187,12 +192,8 @@ function drawShapes() {
         shapes[i].draw(ctx);
     }
 }
-export function setMode(mode, source) {
+export function setMode(mode) {
     currentMode = mode;
-    unfokusButtons();
-    if (source != null) {
-        source.setAttribute("style", "background: #686868;");
-    }
     for (let i = 0; i < shapes.length; i++) {
         shapes[i].seeOutline = false;
     }
@@ -271,13 +272,5 @@ if (localStorage.getItem(keyLokalStorage)) {
     let shapesJSON = JSON.parse(localStorage.getItem(keyLokalStorage));
     shapes = shapesFromJSON(shapesJSON);
     drawShapes();
-}
-function showSidebar() {
-    const sidebar = document.querySelector('.sidebar');
-    sidebar.style.display = 'flex';
-}
-function hideSidebar() {
-    const sidebar = document.querySelector('.sidebar');
-    sidebar.style.display = 'none';
 }
 //# sourceMappingURL=index.js.map
