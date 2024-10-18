@@ -254,12 +254,7 @@ function drawShapes() {
 
 export function setMode(mode: string, source: HTMLElement | null) {
   currentMode = mode;
-
-  unfokusButtons();
-  if (source != null) {
-    source.setAttribute("style", "background: #686868;");
-  }
-
+   
   for (let i = 0; i < shapes.length; i++) {
     shapes[i].seeOutline = false;
   }

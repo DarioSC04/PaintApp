@@ -119,6 +119,7 @@ undoButtonMobile.addEventListener("click", (e) => {
 const redoButton = document.getElementById("redoButton") as HTMLElement;
 redoButton.addEventListener("click", (e) => {
     redo();
+    redoButton.setAttribute("style","src='Hover_Bottons/Redo_hover.png'");
 });
 
 const redoButtonMobile = document.getElementById("redoButtonMobile") as HTMLElement;
