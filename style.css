@@ -132,34 +132,8 @@ h3 {
   font-style: normal;
   color: white;
 }
-#pinkButton,
-#yellowButton,
-#redButton,
-#blueButton,
-#greenButton,
-#circleButton,
-#lineButton,
-#brushButton,
-#rubberButton,
-#recktanglebutton,
-#undoButton,
-#redoButton,
-#pointerButton,
-#fillButton,
-#pinkButtonMobile,
-#yellowButtonMobile,
-#redButtonMobile,
-#blueButtonMobile,
-#greenButtonMobile,
-#circleButtonMobile,
-#lineButtonMobile,
-#brushButtonMobile,
-#rubberButtonMobile,
-#recktanglebuttonMobile,
-#undoButtonMobile,
-#redoButtonMobile,
-#pointerButtonMobile,
-#fillButtonMobile {
+
+.buttonwidth {
   width: 30px;
 }
 

@@ -2,7 +2,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Photoshop Projekt</title>
   <link rel="icon" href="Tools/paint-brush.png" type="image/x-icon">
-
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://use.typekit.net/pwx1zcb.css">
   <script defer src="dist/index.js" type="module"></script>
@@ -28,9 +27,9 @@
       <section>
         <p>Brush:</p>
         <div class="tools">
-          <input type="image" src="Tools/pointer.png" name="pointerButton" id="pointerButtonMobile" alt="Pointer Button" width="25px"/>
-          <input type="image" src="Tools/paint-brush.png" name="brushbutton" id="brushButtonMobile" alt="Paint Brush"/>
-          <input type="image" src="Tools/rubber.png" name="rubberbutton" id="rubberButtonMobile" alt="Rubber" />
+          <input type="image" class="buttonwidth" src="Tools/pointer.png" name="pointerButton" id="pointerButtonMobile" alt="Pointer Button" width="25px"/>
+          <input type="image" class="buttonwidth" src="Tools/paint-brush.png" name="brushbutton" id="brushButtonMobile" alt="Paint Brush"/>
+          <input type="image" class="buttonwidth" rc="Tools/rubber.png" name="rubberbutton" id="rubberButtonMobile" alt="Rubber" />
           <h3>Dicke einstellen:</h3> <input type="range" id="sliderMobile" name="slider" min="1" max="15" value="5" alt ="Dicke Slider"> <span
               id="sliderValueMobile">5</span>
       </section>
@@ -39,17 +38,17 @@
       <section>
         <p>Un/Redo:</p>
         <div class="Redo">
-          <input type="image" src="Tools/UndoButton.png" name="undoButton" id="undoButtonMobile" alt="Undo" />
-          <input type="image" src="Tools/RedoButton.png" name="redoButton" id="redoButtonMobile" alt="Redo"/>
+          <input type="image" class="buttonwidth" src="Tools/UndoButton.png" name="undoButton" id="undoButtonMobile" alt="Undo" />
+          <input type="image" class="buttonwidth" src="Tools/RedoButton.png" name="redoButton" id="redoButtonMobile" alt="Redo"/>
         </div>
       </section>
 
       <section>
         <p>Shape's:</p>
         <div class="forms">
-          <input type="image" src="Shape/circle.png" name="circlebutton" id="circleButtonMobile" alt="Circle" />
-          <input type="image" src="Shape/line.png" name="linebutton" id="lineButtonMobile" alt="Line" />
-          <input type="image" src="Shape/recktangle.png" name="recktanglebutton" id="recktangleButtonMobile" alt="Reckstange"/>
+          <input type="image" class="buttonwidth" src="Shape/circle.png" name="circlebutton" id="circleButtonMobile" alt="Circle" />
+          <input type="image" class="buttonwidth" src="Shape/line.png" name="linebutton" id="lineButtonMobile" alt="Line" />
+          <input type="image" class="buttonwidth" src="Shape/recktangle.png" name="recktanglebutton" id="recktangleButtonMobile" alt="Reckstange"/>
         </div>
       </section>
 
@@ -59,12 +58,12 @@
           <h3><input type="color" id="colorPickerMobile" name="colorPicker" value="#000000" alt="Color">
             <span id="colorValueMobile">#000000</span>
           </h3>
-          <input type="image" src="Color Images/fill.png" name="fillButton" id="fillButtonMobile" alt="Fill Button" />
-          <input type="image" src="Color Images/blue-button-0000ff.png" name="blueButton" id="blueButtonMobile" alt="Blue Button" />
-          <input type="image" src="Color Images/green-button-009b00.png" name="greenButton" id="greenButtonMobile" alt="Green Button" />
-          <input type="image" src="Color Images/pink-button-f200ff.png" name="pinkButton" id="pinkButtonMobile" alt="Pink Button" />
-          <input type="image" src="Color Images/red-button-ff0000.png" name="redButton" id="redButtonMobile" alt="Red Button" />
-          <input type="image" src="Color Images/yellow-button-ffe000.png" name="yellowButton" id="yellowButtonMobile" alt="Yellow Button" />
+          <input type="image" class="buttonwidth" src="Color Images/fill.png" name="fillButton" id="fillButtonMobile" alt="Fill Button" />
+          <input type="image" class="buttonwidth" src="Color Images/blue-button-0000ff.png" name="blueButton" id="blueButtonMobile" alt="Blue Button" />
+          <input type="image" class="buttonwidth" src="Color Images/green-button-009b00.png" name="greenButton" id="greenButtonMobile" alt="Green Button" />
+          <input type="image" class="buttonwidth" src="Color Images/pink-button-f200ff.png" name="pinkButton" id="pinkButtonMobile" alt="Pink Button" />
+          <input type="image" class="buttonwidth" src="Color Images/red-button-ff0000.png" name="redButton" id="redButtonMobile" alt="Red Button" />
+          <input type="image" class="buttonwidth" src="Color Images/yellow-button-ffe000.png" name="yellowButton" id="yellowButtonMobile" alt="Yellow Button" />
         </div>
       </section>
       <div2 class=align-right> <button id="saveButtonMobile">Speichern</button> </div2>
@@ -79,28 +78,30 @@
       <section>
         <p>Brush:</p>
         <div class="tools">
-          <input type="image" src="Tools/pointer.png" name="pointerButton" id="pointerButton" alt="Pointer Button" />
-          <input type="image" src="Tools/paint-brush.png" name="brushbutton" id="brushButton" alt="Paint Brush" />
-          <input type="image" src="Tools/rubber.png" name="rubberbutton" id="rubberButton" alt="Rubber Button" />
-          <h3>Dicke einstellen: <input type="range" id="slider" name="slider" min="1" max="15" value="5" alt="Dicke Slider"> <span
+          <input type="image" class="buttonwidth" src="Tools/pointer.png" name="pointerButton" id="pointerButton" alt="Pointer Button" />
+          <input type="image" class="buttonwidth" src="Tools/paint-brush.png" name="brushbutton" id="brushButton" alt="Paint Brush" />
+          <input type="image" class="buttonwidth" src="Tools/rubber.png" name="rubberbutton" id="rubberButton" alt="Rubber Button" />
+          <p>Dicke einstellen:
+          <input type="range" id="slider" name="slider" min="1" max="15" value="5" alt="Dicke Slider"> <span
               id="sliderValue">5</span>
+          </p>
       </section>
 
       </div>
       <section>
         <p>Un/Redo:</p>
         <div class="Redo">
-          <input type="image" src="Tools/UndoButton.png" name="undoButton" id="undoButton" alt="Undo Button" />
-          <input type="image" src="Tools/RedoButton.png" name="redoButton" id="redoButton" alt="Redo Button" />
+          <input type="image" class="buttonwidth" src="Tools/UndoButton.png" name="undoButton" id="undoButton" alt="Undo Button" />
+          <input type="image" class="buttonwidth" src="Tools/RedoButton.png" name="redoButton" id="redoButton" alt="Redo Button" />
         </div>
       </section>
 
       <section>
         <p>Shape's:</p>
         <div class="forms">
-          <input type="image" src="Shape/circle.png" name="circlebutton" id="circleButton" alt="Circle Button" />
-          <input type="image" src="Shape/line.png" name="linebutton" id="lineButton" alt="Line Button" />
-          <input type="image" src="Shape/recktangle.png" name="recktanglebutton" id="recktangleButton" alt="Rectangle Button" />
+          <input type="image" class="buttonwidth" src="Shape/circle.png" name="circlebutton" id="circleButton" alt="Circle Button" />
+          <input type="image" class="buttonwidth" src="Shape/line.png" name="linebutton" id="lineButton" alt="Line Button" />
+          <input type="image" class="buttonwidth" src="Shape/recktangle.png" name="recktanglebutton" id="recktangleButton" alt="Rectangle Button" />
         </div>
       </section>
 
@@ -110,17 +111,18 @@
           <h3><input type="color" id="colorPicker" name="colorPicker" value="#000000">
             <span id="colorValue">#000000</span>
           </h3>
-          <input type="image" src="Color Images/fill.png" name="fillButton" id="fillButton" alt="Fill Button" />
-          <input type="image" src="Color Images/blue-button-0000ff.png" name="blueButton" id="blueButton" alt="Blue Button" />
-          <input type="image" src="Color Images/green-button-009b00.png" name="greenButton" id="greenButton" alt="Green Button" />
-          <input type="image" src="Color Images/pink-button-f200ff.png" name="pinkButton" id="pinkButton" alt="Pink Button" />
-          <input type="image" src="Color Images/red-button-ff0000.png" name="redButton" id="redButton" alt="Red Button" />
-          <input type="image" src="Color Images/yellow-button-ffe000.png" name="yellowButton" id="yellowButton" alt="Yellow Button" />
+          <input type="image" class="buttonwidth" src="Color Images/fill.png" name="fillButton" id="fillButton" alt="Fill Button" />
+          <input type="image" class="buttonwidth" src="Color Images/blue-button-0000ff.png" name="blueButton" id="blueButton" alt="Blue Button" />
+          <input type="image" class="buttonwidth" src="Color Images/green-button-009b00.png" name="greenButton" id="greenButton" alt="Green Button" />
+          <input type="image" class="buttonwidth" src="Color Images/pink-button-f200ff.png" name="pinkButton" id="pinkButton" alt="Pink Button" />
+          <input type="image" class="buttonwidth" src="Color Images/red-button-ff0000.png" name="redButton" id="redButton" alt="Red Button" />
+          <input type="image" class="buttonwidth" src="Color Images/yellow-button-ffe000.png" name="yellowButton" id="yellowButton" alt="Yellow Button" />
         </div>
       </section>
     </section>
   </aside>
   <canvas id="canvas"></canvas>
+
 
   <script> 
     <!-- muss hier sein, da Buttons nicht immer sichtbar sind -->
