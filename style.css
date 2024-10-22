@@ -60,24 +60,8 @@ aside:hover {
   justify-content: flex-start;
 }
 
-.tools {
-  margin-bottom: 25px;
-  margin-top: -10px;
-}
-
-.color {
-  margin-bottom: 25px;
-  margin-top: -10px;
-}
-
-.forms {
-  margin-bottom: 25px;
-  margin-top: -10px;
-}
-
-.Redo {
-  margin-bottom: 25px;
-  margin-top: -10px;
+.toolbar {
+  margin-bottom: 25px;  
 }
 
 #saveButton,
@@ -118,19 +102,22 @@ h2 {
   color: white;
 }
 
-p{
-  font-family: adobe-clean;
-  font-weight: 300;
-  font-style: normal;
-  color: white;
-}
-
 h3 {
   font-family: adobe-clean;
   font-size: 12px;
   font-weight: 300;
   font-style: normal;
   color: white;
+  margin-top: 0px;
+}
+
+p{
+  font-family: adobe-clean;
+  font-weight: 300;
+  font-style: normal;
+  color: white;
+  margin-bottom: 5px;
+  margin-top: 0px; 
 }
 
 .buttonwidth {

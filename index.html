@@ -7,40 +7,45 @@
   <script defer src="dist/index.js" type="module"></script>
 </head>
 
-<body>
-  /* Mobile Version */ 
-  <nav id="nav">
-    <div2 class=align-center>
+<body> 
+  <nav>
+    <div>
       <h1> Photoshop </h1>
-    </div2>
-    <div3 onclick=showSidebar() class="menü"> 
-      <svg xmlns="http://www.w3.org/2000/svg" height="30px"
-        viewBox="0 -960 960 960" width="30px" fill="#FFFFFF">
+    </div>
+    <div onclick=showSidebar() class="menü"> 
+      <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#FFFFFF">
         <path d="M400-240v-80h160v80H400ZM240-440v-80h480v80H240ZM120-640v-80h720v80H120Z" />
       </svg>
-    </div3>
-    <div2 class="align-right hideOnMobile"> <button id="saveButton">Speichern</button> </div2>
+    </div>
+    <div class="align-right hideOnMobile"> <button id="saveButton">Speichern</button></div>
 
     <section class="sidebar" id="mobileNavigation">
-      <div2 onclick=hideSidebar()><svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960"
-          width="30px" fill="#FFFFFF">
+      <div onclick=hideSidebar()>
+        <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#FFFFFF">
           <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
-        </svg></div2>
+        </svg>
+      </div>
       <h2 id="funktionWählenMobile">Funktion wahlen:</h2>
       <section>
         <p>Brush:</p>
-        <div class="tools">
+        <div class="toolbar">
           <input type="image" class="buttonwidth" src="Tools/pointer.png" name="pointerButton" id="pointerButtonMobile" alt="Pointer Button" width="25px"/>
           <input type="image" class="buttonwidth" src="Tools/paint-brush.png" name="brushbutton" id="brushButtonMobile" alt="Paint Brush"/>
-          <input type="image" class="buttonwidth" rc="Tools/rubber.png" name="rubberbutton" id="rubberButtonMobile" alt="Rubber" />
-          <h3>Dicke einstellen:</h3> <input type="range" id="sliderMobile" name="slider" min="1" max="15" value="5" alt ="Dicke Slider"> <span
-              id="sliderValueMobile">5</span>
+          <input type="image" class="buttonwidth" src="Tools/rubber.png" name="rubberbutton" id="rubberButtonMobile" alt="Rubber" />
+        </div>
       </section>
 
-      </div>
+      <section>
+        <p>Dicke einstellen:</p>
+        <div class="toolbar">
+        <p><input type="range" id="sliderMobile" name="slider" min="1" max="15" value="5" alt ="Dicke Slider"> <span
+              id="sliderValueMobile">5</span></p>
+        </div>
+      </section>
+
       <section>
         <p>Un/Redo:</p>
-        <div class="Redo">
+        <div class="toolbar">
           <input type="image" class="buttonwidth" src="Tools/UndoButton.png" name="undoButton" id="undoButtonMobile" alt="Undo" />
           <input type="image" class="buttonwidth" src="Tools/RedoButton.png" name="redoButton" id="redoButtonMobile" alt="Redo"/>
         </div>
@@ -48,7 +53,7 @@
 
       <section>
         <p>Shape's:</p>
-        <div class="forms">
+        <div class="toolbar">
           <input type="image" class="buttonwidth" src="Shape/circle.png" name="circlebutton" id="circleButtonMobile" alt="Circle" />
           <input type="image" class="buttonwidth" src="Shape/line.png" name="linebutton" id="lineButtonMobile" alt="Line" />
           <input type="image" class="buttonwidth" src="Shape/recktangle.png" name="recktanglebutton" id="recktangleButtonMobile" alt="Reckstange"/>
@@ -57,7 +62,7 @@
 
       <section>
         <p>Farbe wahlen:</p>
-        <div class="color">
+        <div class="toolbar">
           <h3><input type="color" id="colorPickerMobile" name="colorPicker" value="#000000" alt="Color">
             <span id="colorValueMobile">#000000</span>
           </h3>
@@ -69,21 +74,26 @@
           <input type="image" class="buttonwidth" src="Color Images/yellow-button-ffe000.png" name="yellowButton" id="yellowButtonMobile" alt="Yellow Button" />
         </div>
       </section>
-      <div2 class=align-right> <button id="saveButtonMobile">Speichern</button> </div2>
+      <div class=align-right>
+         <button id="saveButtonMobile">Speichern</button>
+      </div>
     </section>
   </nav>
 
-
-  /* Desktop Version */
   <aside id="aside" class="hideOnMobile">
     <section>
-      <h2 id="funktionWählen">Funktion wahlen:</h2>
+      <h2>Funktion wahlen:</h2>
       <section>
         <p>Brush:</p>
-        <div class="tools">
+        <div class="toolbar">
           <input type="image" class="buttonwidth" src="Tools/pointer.png" name="pointerButton" id="pointerButton" alt="Pointer Button" />
           <input type="image" class="buttonwidth" src="Tools/paint-brush.png" name="brushbutton" id="brushButton" alt="Paint Brush" />
           <input type="image" class="buttonwidth" src="Tools/rubber.png" name="rubberbutton" id="rubberButton" alt="Rubber Button" />
+        </div>
+      </section>
+
+      <section>
+        <div class="toolbar">
           <p>Dicke einstellen:
             <input type="range" id="slider" name="slider" min="1" max="15" value="5" alt="Dicke Slider"> <span id="sliderValue">5</span>
           </p>
@@ -93,7 +103,7 @@
 
       <section>
         <p>Un/Redo:</p>
-        <div class="Redo">
+        <div class="toolbar">
           <input type="image" class="buttonwidth" src="Tools/UndoButton.png" name="undoButton" id="undoButton" alt="Undo Button" />
           <input type="image" class="buttonwidth" src="Tools/RedoButton.png" name="redoButton" id="redoButton" alt="Redo Button" />
         </div>
@@ -101,7 +111,7 @@
 
       <section>
         <p>Shape's:</p>
-        <div class="forms">
+        <div class="toolbar">
           <input type="image" class="buttonwidth" src="Shape/circle.png" name="circlebutton" id="circleButton" alt="Circle Button" />
           <input type="image" class="buttonwidth" src="Shape/line.png" name="linebutton" id="lineButton" alt="Line Button" />
           <input type="image" class="buttonwidth" src="Shape/recktangle.png" name="recktanglebutton" id="recktangleButton" alt="Rectangle Button" />
@@ -110,7 +120,7 @@
 
       <section>
         <p>Chose Color:</p>
-        <div class="color">
+        <div class="toolbar">
           <h3><input type="color" id="colorPicker" name="colorPicker" value="#000000">
             <span id="colorValue">#000000</span>
           </h3>
@@ -126,7 +136,6 @@
   </aside>
   <canvas id="canvas"></canvas>
 
-
   <script> 
     <!-- muss hier sein, da Buttons nicht immer sichtbar sind -->
 
@@ -139,6 +148,6 @@
       const sidebar = document.querySelector('.sidebar')
       sidebar.style.display = 'none'
     }
-
   </script>
+
 </body>
