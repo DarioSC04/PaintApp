@@ -8,14 +8,17 @@
 </head>
 
 <body>
+  /* Mobile Version */ 
   <nav id="nav">
     <div2 class=align-center>
       <h1> Photoshop </h1>
     </div2>
-    <div3 onclick=showSidebar() class="menü"> <svg xmlns="http://www.w3.org/2000/svg" height="30px"
+    <div3 onclick=showSidebar() class="menü"> 
+      <svg xmlns="http://www.w3.org/2000/svg" height="30px"
         viewBox="0 -960 960 960" width="30px" fill="#FFFFFF">
         <path d="M400-240v-80h160v80H400ZM240-440v-80h480v80H240ZM120-640v-80h720v80H120Z" />
-      </svg></div3>
+      </svg>
+    </div3>
     <div2 class="align-right hideOnMobile"> <button id="saveButton">Speichern</button> </div2>
 
     <section class="sidebar" id="mobileNavigation">
@@ -68,10 +71,10 @@
       </section>
       <div2 class=align-right> <button id="saveButtonMobile">Speichern</button> </div2>
     </section>
-
-
   </nav>
 
+
+  /* Desktop Version */
   <aside id="aside" class="hideOnMobile">
     <section>
       <h2 id="funktionWählen">Funktion wahlen:</h2>
@@ -82,12 +85,12 @@
           <input type="image" class="buttonwidth" src="Tools/paint-brush.png" name="brushbutton" id="brushButton" alt="Paint Brush" />
           <input type="image" class="buttonwidth" src="Tools/rubber.png" name="rubberbutton" id="rubberButton" alt="Rubber Button" />
           <p>Dicke einstellen:
-          <input type="range" id="slider" name="slider" min="1" max="15" value="5" alt="Dicke Slider"> <span
-              id="sliderValue">5</span>
+            <input type="range" id="slider" name="slider" min="1" max="15" value="5" alt="Dicke Slider"> <span id="sliderValue">5</span>
           </p>
+        </div>
       </section>
 
-      </div>
+
       <section>
         <p>Un/Redo:</p>
         <div class="Redo">
