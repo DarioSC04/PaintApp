@@ -21,6 +21,7 @@
 
 ## Contribution
 
-Marlon hat sich in diesem Projekt auf 
+Marlon mainly wrote the HTML and CSS code for this project, handling everything related to the appearance of the website.
+Dario primarily implemented the website's functions, from drawing and saving shapes to the eraser and moving objects.
 
 ## How to run it
