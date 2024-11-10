@@ -1,0 +1,26 @@
+# Drawing Website
+
+**A small web application with all the basic functions of a drawing program**
+
+## Features
+
+* Freehand drawing with a brush
+* Drawing of lines
+* Drawing of rectangles
+* Drawing of circles
+* Option to fill circles and rectangles
+* Adjustable line thickness
+* Individuel color selection
+* Quick color selection
+* Eraser for removing entire shapes
+* Pointer tool for moving objects
+* Undo/Redo buttons
+* Save button to download drawings as PNG
+* Persistent drawings, even after reloading the page
+* Mobile-friendly with responsive design
+
+## Contribution
+
+Marlon hat sich in diesem Projekt auf 
+
+## How to run it
