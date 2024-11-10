@@ -23,6 +23,7 @@
 
 Marlon mainly wrote the HTML and CSS code for this project, handling everything related to the appearance of the website.
 Dario primarily implemented the website's functions, from drawing and saving shapes to the eraser and moving objects.
+But we were in constant communication and giving each other feedback. So in the end it was a group projekt.
 
 ## How to run it
 
