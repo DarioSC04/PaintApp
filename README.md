@@ -25,3 +25,5 @@ Marlon mainly wrote the HTML and CSS code for this project, handling everything 
 Dario primarily implemented the website's functions, from drawing and saving shapes to the eraser and moving objects.
 
 ## How to run it
+
+To run the project, you first need to install the Live Server plugin via Node.js with the following command: `npm install -g live-server`. This command should be executed in the root directory of the project. Once the plugin is successfully installed, you can start it with one of the following commands: `npx live-server` or `live-server`.
