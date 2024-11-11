@@ -152,17 +152,23 @@ sliderMobile.addEventListener("input", (e) => {
 const fillButton = document.getElementById("fillButton");
 fillButton.addEventListener("click", (e) => {
     setCurrentFill();
-    if (getCurrentFill()) {
-        fillButton.src = "Hover_Buttons/fill_hover.png";
-    }
-    else {
-        fillButton.src = "Color Images/fill.png";
-    }
+    updateFillButton();
 });
 const fillButtonMobile = document.getElementById("fillButtonMobile");
 fillButtonMobile.addEventListener("click", (e) => {
     setCurrentFill();
+    updateFillButton();
 });
+function updateFillButton() {
+    if (getCurrentFill()) {
+        fillButton.src = "Hover_Buttons/fill_hover.png";
+        fillButtonMobile.src = "Hover_Buttons/fill_hover.png";
+    }
+    else {
+        fillButton.src = "Color Images/fill.png";
+        fillButtonMobile.src = "Color Images/fill.png";
+    }
+}
 const pointButton = document.getElementById("pointerButton");
 pointButton.addEventListener("click", (e) => {
     unfokusButtons();
